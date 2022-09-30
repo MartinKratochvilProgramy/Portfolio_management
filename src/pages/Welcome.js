@@ -9,6 +9,8 @@ export default function Welcome() {
     <div>
       <h1>Welcome {credentials && credentials.username}</h1>  
       {!credentials && <Link to="/register">Register</Link>}
+      <br />
+      {!credentials && <Link to="/login">Login</Link>}
     </div>
   )
 }

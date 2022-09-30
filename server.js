@@ -24,7 +24,7 @@ app.use(express.json());
 app.post("/register", async (req, res) => {
   // create user account
     const {username, password} = req.body;
-    // find if user exists, if y send 500 err
+    // find if user exists, if yes send 500 err
     const user = await User.findOne({ username }).exec();
     if (user) {
       res.status(500);
@@ -39,11 +39,28 @@ app.post("/register", async (req, res) => {
     });
 });
 
+app.post("/login", async (req, res) => {
+  // create user account
+    const {username, password} = req.body;
+    // find if user exists, if yes send 500 err
+    const user = await User.findOne({ username }).exec();
+    if (!user || user.password !== password) {
+      res.status(403);
+      res.json({
+        message: "Invalid login",
+      });
+      return;
+    }
+    res.json({  
+      message: "success",
+    });
+});
+
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", function () {
-});
-app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}`);
+  app.listen(port, () => {
+    console.log(`Listening at http://localhost:${port}`);
+  });
 });
