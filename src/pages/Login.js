@@ -21,7 +21,6 @@ export default function Login() {
   const navigate  = useNavigate();
 
 
-  // use state vars to make http request
   const login = (e) => {
     e.preventDefault();
     fetch(`http://localhost:4000/login`, {

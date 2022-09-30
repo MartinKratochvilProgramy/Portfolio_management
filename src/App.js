@@ -13,8 +13,11 @@ import Login from './pages/Login';
 export const CredentialsContext = React.createContext();
 
 function App() {
-
-  const credentialsState = useState(null);
+  //TODO credentialsState = null
+  const credentialsState = useState({
+    	    username: '123',
+          password: '123'
+        });
   
   return (
     <div className="App">
