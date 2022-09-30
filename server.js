@@ -51,7 +51,7 @@ app.post("/login", async (req, res) => {
       });
       return;
     }
-    res.json({  
+    res.json({
       message: "success",
     });
 });
