@@ -22,8 +22,22 @@ app.use(cors());
 app.use(express.json());
 
 app.post("/register", async (req, res) => {
-  // create user account
+  // create user account, return 500 err if no password or username given
     const {username, password} = req.body;
+    if (username === '') {
+      res.status(500);
+      res.json({
+        message: "Username empty",
+      });
+      return;
+    }
+    if (password === '') {
+      res.status(500);
+      res.json({
+        message: "Password empty",
+      });
+      return;
+    }
     // find if user exists, if yes send 500 err
     const user = await User.findOne({ username }).exec();
     if (user) {
@@ -42,15 +56,24 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   // create user account
     const {username, password} = req.body;
-    // find if user exists, if yes send 500 err
+    // find if user exists, if not send back 403 err
     const user = await User.findOne({ username }).exec();
-    if (!user || user.password !== password) {
+    if (!user) {
       res.status(403);
       res.json({
-        message: "Invalid login",
+        message: "User does not exist",
       });
       return;
     }
+    //check password
+    if (user && user.password !== password) {
+      res.status(403);
+      res.json({
+        message: "Wrong password",
+      });
+      return;
+    }
+
     res.json({
       message: "success",
     });
