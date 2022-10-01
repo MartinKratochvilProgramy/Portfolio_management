@@ -5,7 +5,11 @@ import { CredentialsContext } from '../App';
 export default function Todos() {
   const [todos, setTodos] = useState([]);
   const [todoText, setTodoText] = useState('');
-  const [credentials] = useContext(CredentialsContext);
+  const [credentials, setCredentials] = useContext(CredentialsContext);
+
+  function logout() {
+    setCredentials(null);
+  }
   
   const persist = (newTodos) => {
     // hit the endpoint and write to db
@@ -65,6 +69,8 @@ export default function Todos() {
             <Todo todo={todo} key={index} index={index} toggleComplete={toggleComplete} />
           )
         })}
+      <br />
+      <button onClick={logout}>Logout</button>
     </div>
   )
 }

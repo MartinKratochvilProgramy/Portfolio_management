@@ -49,7 +49,6 @@ export default function Login() {
   return (
     <div>
       <h1>Login</h1>
-      {error && (<span className='error-message'>{error}</span>)}
       <form onSubmit={login}>
         <input
             onChange={(e) => setUsername(e.target.value)} 
@@ -63,6 +62,7 @@ export default function Login() {
         <br />
         <button type='submit'>Login</button>
       </form>
+      {error && (<span className='error-message'>{error}<br /></span>)}
       <Link to="/">Home</Link>
       <br />
       <Link to="/register">Register</Link>

@@ -4,7 +4,7 @@ import Todos from '../components/Todos';
 import { CredentialsContext } from '../App';
 
 export default function Welcome() {
-  const [credentials] = useContext(CredentialsContext);
+  const [credentials, ] = useContext(CredentialsContext);
 
   return (
     <div>
@@ -13,7 +13,6 @@ export default function Welcome() {
       <br />
       {!credentials && <Link to="/login">Login</Link>}
       {credentials && <Todos />}
-      <br />
     </div>
   )
 }
