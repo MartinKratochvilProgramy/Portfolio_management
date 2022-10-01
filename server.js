@@ -14,8 +14,19 @@ const userSchema = new mongoose.Schema({
   username: String,
   password: String
 })
-
 const User = mongoose.model("User", userSchema);
+
+const todosSchema = new mongoose.Schema({
+  username: String,
+  todos: [
+    {
+      text: String,
+      done: Boolean
+    }
+  ]
+})
+const Todos = mongoose.model("Todos", todosSchema);
+
 
 // allow localhost 3000 requests
 app.use(cors());
@@ -77,6 +88,50 @@ app.post("/login", async (req, res) => {
     res.json({
       message: "success",
     });
+});
+
+app.post("/todos", async (req, res) => {
+  // add todos to db
+  const { authorization } = req.headers;
+  const [, token] = authorization.split(" ");
+  const [username, password] = token.split(":");
+  const todosItems = req.body.newTodos;
+  const user = await User.findOne({ username }).exec();
+  if (!user || user.password !== password) {
+    res.status(403);
+    res.json({
+      message: "invalid access",
+    });
+    return;
+  }
+  const todos = await Todos.findOne({ username: username }).exec();
+  if (!todos) {
+    await Todos.create({
+      username: username,
+      todos: todosItems
+    });
+  } else {
+    todos.todos = todosItems;
+    await todos.save();
+  }
+  res.json(todosItems);
+});
+
+app.get("/todos", async (req, res) => {
+  // add todos to db
+  const { authorization } = req.headers;
+  const [, token] = authorization.split(" ");
+  const [username, password] = token.split(":");
+  const user = await User.findOne({ username }).exec();
+  if (!user || user.password !== password) {
+    res.status(403);
+    res.json({
+      message: "invalid access",
+    });
+    return;
+  }
+  const {todos} = await Todos.findOne({ username: username }).exec();
+  res.json(todos);
 });
 
 
