@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import Todo from './Todo';
+import Todo from '../components/Todo';
 import { CredentialsContext } from '../App';
 import { useNavigate  } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';

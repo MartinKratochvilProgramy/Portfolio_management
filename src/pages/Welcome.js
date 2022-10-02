@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom';
-import Todos from '../components/Todos';
+import Todos from './Todos';
 import { CredentialsContext } from '../App';
 
 export default function Welcome() {

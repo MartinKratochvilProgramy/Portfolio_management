@@ -1,0 +1,16 @@
+<h1 className='text-red-300'>Login</h1>
+<form onSubmit={login}>
+  <input
+      onChange={(e) => setUsername(e.target.value)} 
+      type="text" 
+      placeholder='username'/>
+  <br />
+  <input
+      onChange={(e) => setPassword(e.target.value)} 
+      type="password" 
+      placeholder='password'/>
+  <br />
+  <button type='submit'>Login</button>
+</form>
+{error && (<span className='error-message'>{error}<br /></span>)}
+<Link to="/register">Register</Link>
