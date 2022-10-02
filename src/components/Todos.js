@@ -26,6 +26,7 @@ export default function Todos() {
   };
 
   useEffect(() => {
+    // fetch todos on load
     fetch(`http://localhost:4000/todos`, {
       method: 'GET',
       headers: {
@@ -35,7 +36,7 @@ export default function Todos() {
     })
     .then((response ) => response.json())
     .then((todos) => setTodos(todos));
-  }, []);
+  }, [credentials]);
   
 
   const addTodo = (e) => {
@@ -47,13 +48,19 @@ export default function Todos() {
     persist(newTodos);
   }
 
-  function toggleComplete(index) {
+  function toggleTodo(index) {
     const newTodoList = [...todos];
     newTodoList[index].done = !newTodoList[index].done;
     setTodos(newTodoList);
     persist(newTodoList);
   }
 
+  function deleteTodo(index) {
+    const newTodoList = [...todos];
+    newTodoList.splice(index, 1)
+    setTodos(newTodoList);
+    persist(newTodoList);
+  }
 
   return (
     <div>
@@ -66,7 +73,12 @@ export default function Todos() {
       <br />
         {todos.map((todo, index) => {
           return (
-            <Todo todo={todo} key={index} index={index} toggleComplete={toggleComplete} />
+            <Todo 
+              todo={todo} 
+              key={index} 
+              index={index} 
+              toggleComplete={toggleTodo}
+              deleteTodo={deleteTodo} />
           )
         })}
       <br />

@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link
 } from "react-router-dom";
 import React, { useState } from "react";
 import Register from './pages/Register';
@@ -18,7 +17,7 @@ function App() {
   //   	    username: '123',
   //         password: '123'
   //       });
-  const credentialsState = useState(null);
+    const credentialsState = useState(null);
 
   return (
     <div className="App">

@@ -130,8 +130,13 @@ app.get("/todos", async (req, res) => {
     });
     return;
   }
-  const {todos} = await Todos.findOne({ username: username }).exec();
-  res.json(todos);
+  const foundTodos = await Todos.findOne({ username: username }).exec();
+  if (foundTodos) {
+    const { todos } = foundTodos;
+    res.json(todos);
+  } else {
+    res.json([]);
+  }
 });
 
 
