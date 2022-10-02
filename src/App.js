@@ -8,6 +8,7 @@ import React, { useState } from "react";
 import Register from './pages/Register';
 import Welcome from './pages/Welcome';
 import Login from './pages/Login';
+import Todos from './components/Todos';
 
 export const CredentialsContext = React.createContext();
 
@@ -20,10 +21,10 @@ function App() {
       <CredentialsContext.Provider value={credentialsState}>
         <Router>
           <Routes>
-            <Route exact path='/' element={<Welcome  />}></Route>
+            <Route exact path='/' element={<Login  />}></Route>
             <Route exact path='/register' element={<Register />}></Route>
-            <Route exact path='/login' element={<Login />}></Route>
-          </Routes>
+            <Route exact path='/todos' element={<Todos />}></Route>
+          </Routes> 
         </Router>
       </CredentialsContext.Provider>
     </div>

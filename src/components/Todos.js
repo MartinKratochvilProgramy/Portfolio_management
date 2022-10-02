@@ -1,16 +1,20 @@
 import React, { useState, useContext, useEffect } from 'react'
 import Todo from './Todo';
 import { CredentialsContext } from '../App';
+import { useNavigate  } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+
 
 export default function Todos() {
   const [todos, setTodos] = useState([]);
   const [todoText, setTodoText] = useState('');
   const [credentials, setCredentials] = useContext(CredentialsContext);
-
+  
+  const navigate = useNavigate();
   function logout() {
     setCredentials(null);
     localStorage.setItem('user', null)
+    navigate("/");
   }
   
   const persist = (newTodos) => {
