@@ -9,6 +9,7 @@ export default function Todos() {
 
   function logout() {
     setCredentials(null);
+    localStorage.setItem('user', null)
   }
   
   const persist = (newTodos) => {

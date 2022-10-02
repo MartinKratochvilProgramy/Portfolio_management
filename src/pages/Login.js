@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate  } from 'react-router-dom';
 import { CredentialsContext } from '../App';
 
 export const handleErrors = async (response) => {
@@ -18,9 +18,7 @@ export default function Login() {
   const [error, setError] = useState(false); 
   const [, setCredentials] = useContext(CredentialsContext);
 
-  const navigate  = useNavigate();
-
-
+  
   const login = (e) => {
     e.preventDefault();
     fetch(`http://localhost:4000/login`, {
@@ -41,10 +39,16 @@ export default function Login() {
       })
       navigate("/"); //deprec history.push()
     })
+    .then(localStorage.setItem('user', JSON.stringify({
+      username,
+      password
+    })))
     .catch((error) => {
       setError(error.message)
     })
   };
+  
+  const navigate  = useNavigate();
 
   return (
     <div>

@@ -5,7 +5,6 @@ import { CredentialsContext } from '../App';
 
 export default function Welcome() {
   const [credentials, ] = useContext(CredentialsContext);
-
   return (
     <div>
       <h1>Welcome {credentials && credentials.username}</h1>  

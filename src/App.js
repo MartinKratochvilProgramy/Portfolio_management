@@ -12,12 +12,8 @@ import Login from './pages/Login';
 export const CredentialsContext = React.createContext();
 
 function App() {
-  //TODO credentialsState = null
-  // const credentialsState = useState({
-  //   	    username: '123',
-  //         password: '123'
-  //       });
-    const credentialsState = useState(null);
+  const user = JSON.parse(localStorage.getItem('user'));
+  const credentialsState = useState(user);
 
   return (
     <div className="App">

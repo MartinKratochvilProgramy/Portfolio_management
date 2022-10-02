@@ -34,6 +34,10 @@ export default function Register() {
       })
       navigate("/"); //deprec history.push()
     })
+    .then(localStorage.setItem('user', JSON.stringify({
+      username,
+      password
+    })))
     .catch((error) => {
       setError(error.message)
     })

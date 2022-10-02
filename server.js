@@ -118,7 +118,7 @@ app.post("/todos", async (req, res) => {
 });
 
 app.get("/todos", async (req, res) => {
-  // add todos to db
+  // send todos to client
   const { authorization } = req.headers;
   const [, token] = authorization.split(" ");
   const [username, password] = token.split(":");
