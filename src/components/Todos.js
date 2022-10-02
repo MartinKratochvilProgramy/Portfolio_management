@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'
 import Todo from './Todo';
 import { CredentialsContext } from '../App';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function Todos() {
   const [todos, setTodos] = useState([]);
@@ -43,22 +44,24 @@ export default function Todos() {
   const addTodo = (e) => {
     e.preventDefault();
     if (!todoText) return;
-    setTodos([...todos, {text: todoText, done: false}]);
-    const newTodos = [...todos, {text: todoText, done: false}];
+    const newTodos = [...todos, {text: todoText, done: false, _id: uuidv4()}];
+    setTodos(newTodos);
     setTodoText('');
     persist(newTodos);
   }
 
-  function toggleTodo(index) {
+  function toggleTodo(id) {
     const newTodoList = [...todos];
-    newTodoList[index].done = !newTodoList[index].done;
+    const todoToChange = newTodoList.find((todo) => todo._id === id);
+    console.log(newTodoList[0]._id);
+    todoToChange.done = !todoToChange.done;
     setTodos(newTodoList);
     persist(newTodoList);
   }
 
-  function deleteTodo(index) {
+  function deleteTodo(id) {
     const newTodoList = [...todos];
-    newTodoList.splice(index, 1)
+    newTodoList.splice(id, 1)
     setTodos(newTodoList);
     persist(newTodoList);
   }
@@ -72,12 +75,11 @@ export default function Todos() {
         <button type="submit">Add todo</button>
       </form>
       <br />
-        {todos.map((todo, index) => {
+        {todos.map((todo) => {
           return (
             <Todo 
               todo={todo} 
-              key={index} 
-              index={index} 
+              key={todo._id} 
               toggleComplete={toggleTodo}
               deleteTodo={deleteTodo} />
           )

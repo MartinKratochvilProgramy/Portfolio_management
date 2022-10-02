@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const app = express();
 const port = 4000;
 
-
 mongoose.connect("mongodb://127.0.0.1:27017/todo", {
   useUnifiedTopology: true,
   useNewUrlParser: true,
@@ -21,7 +20,8 @@ const todosSchema = new mongoose.Schema({
   todos: [
     {
       text: String,
-      done: Boolean
+      done: Boolean,
+      _id: String
     }
   ]
 })
