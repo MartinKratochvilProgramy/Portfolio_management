@@ -52,6 +52,7 @@ export default function Login() {
   const navigate  = useNavigate();
 
   return (
+    // src: https://tailwind-elements.com/docs/standard/components/login-form/
     <div>
       <section className="h-screen">
         <div className="px-6 h-full text-gray-800">
@@ -59,9 +60,10 @@ export default function Login() {
             <div className="xl:ml-20 xl:w-5/12 lg:w-5/12 md:w-8/12 mb-12 md:mb-0">
               <form onSubmit={login}>
     
-                <h1 className='text-3xl font-semibold mt-2 py-8 mb-0'>SIMPLE WAY TO <span className='text-blue-600'>MANAGE</span>
-                <br />
-                YOUR <span className='text-blue-600'>TODOS</span>
+                <h1 className='text-3xl font-semibold mt-2 py-8 mb-0'>
+                  SIMPLE WAY TO <span className='text-blue-600'>MANAGE</span>
+                  <br />
+                  YOUR <span className='text-blue-600'>TODOS</span> DAILY
                 </h1>
 
                 <div className="mb-6">
