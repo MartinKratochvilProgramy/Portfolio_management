@@ -78,7 +78,7 @@ export default function Todos() {
 
   return (
     <div className="md:px-12 px-2 pt-8 lg:w-6/12 md:w-8/12 w-10/12 m-auto">
-      <form onSubmit={addTodo} className="flex items-center">   
+      <form onSubmit={addTodo} className="flex flex-col space-y-4 items-center">   
           <label htmlFor ="add-todo" className="sr-only">Add todo</label>
           <div className="relative w-full h-full">
               <input 
@@ -111,7 +111,7 @@ export default function Todos() {
     <br />
     <button
       type="submit"
-      className="fixed top-4 right-4 flex flex-row px-7 py-3 text-blue-600 border-solid border-blue-600 border-[1px] bg-white font-medium text-sm leading-snug uppercase rounded whitespace-nowrap shadow-md hover:bg-blue-700 hover:text-white hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+      className="fixed top-4 right-4 flex flex-row px-7 py-3 text-blue-600 border-solid border-blue-600 border-[1px] bg-white font-medium text-sm leading-snug uppercase rounded whitespace-nowrap shadow-md hover:bg-blue-700 hover:text-white hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 focus:text-white active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
       onClick={logout}
     >
       Logout
