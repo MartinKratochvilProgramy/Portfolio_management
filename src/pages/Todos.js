@@ -34,6 +34,7 @@ export default function Todos() {
 
   useEffect(() => {
     // send user home if not loged in
+    console.log("cred:", credentials);
     if (!credentials) {
       navigate("/");
       return;

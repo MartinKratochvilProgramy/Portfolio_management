@@ -3,6 +3,7 @@ import { Link, useNavigate  } from 'react-router-dom';
 import { CredentialsContext } from '../App';
 
 export const handleErrors = async (response) => {
+  console.log(response.headers);
   // throws error when response not OK
   if (!response.ok) {
     const {message} = await response.json();
@@ -16,7 +17,7 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false); 
-  const [, setCredentials] = useContext(CredentialsContext);
+  const [credentials, setCredentials] = useContext(CredentialsContext);
 
   
   const login = (e) => {
@@ -35,17 +36,21 @@ export default function Login() {
         })
       })
       .then(handleErrors)
-      .then(() => {
-        setCredentials({
+      .then(async (res) => {
+        const json = await res.json()
+        const username = "a";
+        const password = "$2b$10$J6sbD1ONcucmGvA4P1Tjo.LP2yRJR.T/v34TKjMk99Rgngr5tkL4W";
+        setCredentials(username, username)
+        console.log("us, pas ", credentials);
+        localStorage.setItem('user', JSON.stringify({
           username,
           password
-        })
-        navigate("/todos"); //deprec history.push()
+        }))
+        return res;
       })
-      .then(localStorage.setItem('user', JSON.stringify({
-        username,
-        password
-      })))
+      .then(() =>
+        navigate("/todos") //deprec history.push()
+      )
       .catch((error) => {
         setError(error.message)
       })
