@@ -87,7 +87,7 @@ export default function Register() {
                       className="inline-block px-7 py-3 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
                       Register
                     </button>
-                    <p className="text-sm font-semibold mt-2 pt-1 mb-0">
+                    <p className="text-m font-semibold mt-2 pt-1 mb-0">
                       Already have an account? <Link 
                                                 to="/" 
                                                 className="text-red-600 hover:text-red-700 focus:text-red-700 transition duration-200 ease-in-out">
@@ -102,25 +102,5 @@ export default function Register() {
         </div>
       </section>
     </div>
-    // <div>
-    //   <h1>Register</h1>
-    //   {error && (<span className='error-message'>{error}</span>)}
-    //   <form onSubmit={register}>
-    //     <input
-    //         onChange={(e) => setUsername(e.target.value)} 
-    //         type="text" 
-    //         placeholder='username'/>
-    //     <br />
-    //     <input
-    //         onChange={(e) => setPassword(e.target.value)} 
-    //         type="password" 
-    //         placeholder='password'/>
-    //     <br />
-    //     <button type='submit'>Register</button>
-    //   </form>
-    //   <Link to="/">Home</Link>
-    //   <br />
-    //   <Link to="/login">Login</Link>
-    // </div>
   )
 }

@@ -6,7 +6,6 @@ import {
 } from "react-router-dom";
 import React, { useState } from "react";
 import Register from './pages/Register';
-import Welcome from './pages/Welcome';
 import Login from './pages/Login';
 import Todos from './pages/Todos';
 

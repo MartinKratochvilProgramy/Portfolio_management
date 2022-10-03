@@ -11,6 +11,7 @@ export default function Todos() {
   const [credentials, setCredentials] = useContext(CredentialsContext);
   
   const navigate = useNavigate();
+
   function logout() {
     setCredentials(null);
     localStorage.setItem('user', null)
@@ -32,6 +33,11 @@ export default function Todos() {
   };
 
   useEffect(() => {
+    // send user home if not loged in
+    if (!credentials) {
+      navigate("/");
+      return;
+    };
     // fetch todos on load
     fetch(`http://localhost:4000/todos`, {
       method: 'GET',
@@ -42,7 +48,7 @@ export default function Todos() {
     })
     .then((response ) => response.json())
     .then((todos) => setTodos(todos));
-  }, [credentials]);
+  }, [credentials, navigate]);
   
 
   const addTodo = (e) => {
@@ -71,25 +77,45 @@ export default function Todos() {
   }
 
   return (
-    <div>
-      <form onSubmit={addTodo}>
-        <input type="text" 
-            onChange={(e) => {setTodoText(e.target.value)}} 
-            value={todoText}/>
-        <button type="submit">Add todo</button>
+    <div className="md:px-12 px-2 pt-8 lg:w-6/12 md:w-8/12 w-10/12 m-auto">
+      <form onSubmit={addTodo} className="flex items-center">   
+          <label htmlFor ="add-todo" className="sr-only">Add todo</label>
+          <div className="relative w-full h-full">
+              <input 
+                type="text" 
+                id="add-todo" 
+                className="bg-gray-50 border h-max border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 focus:outline-none block w-full pl-4 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" 
+                placeholder="Add new todo..." 
+                required="" 
+                onChange={(e) => {setTodoText(e.target.value)}} 
+                value={todoText}
+              />
+          </div>
+          <button
+              type="submit"
+              className="flex flex-row px-7 py-3 text-white bg-blue-600 font-medium text-sm leading-snug uppercase rounded whitespace-nowrap shadow-md hover:bg-blue-700 hover:text-white hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
+              Add todo
+          </button>
       </form>
-      <br />
-        {todos.map((todo) => {
-          return (
-            <Todo 
-              todo={todo} 
-              key={todo._id} 
-              toggleComplete={toggleTodo}
-              deleteTodo={deleteTodo} />
-          )
-        })}
-      <br />
-      <button onClick={logout}>Logout</button>
-    </div>
+    
+    <br />
+      {todos.map((todo) => {
+        return (
+          <Todo 
+            todo={todo} 
+            key={todo._id} 
+            toggleComplete={toggleTodo}
+            deleteTodo={deleteTodo} />
+        )
+      })}
+    <br />
+    <button
+      type="submit"
+      className="fixed top-4 right-4 flex flex-row px-7 py-3 text-blue-600 border-solid border-blue-600 border-[1px] bg-white font-medium text-sm leading-snug uppercase rounded whitespace-nowrap shadow-md hover:bg-blue-700 hover:text-white hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+      onClick={logout}
+    >
+      Logout
+    </button>
+  </div>
   )
 }
