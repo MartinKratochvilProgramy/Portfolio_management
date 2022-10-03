@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CredentialsContext } from '../App';
-import './Register.css';
 
 import { handleErrors } from './Login';
 
@@ -57,9 +56,9 @@ export default function Register() {
               <form onSubmit={register}>
     
                 <h1 className='text-3xl font-semibold mt-2 py-8 md:py-16 mb-0'>
-                  CREATE A NEW
+                  CREATE A <span className='text-blue-600'>NEW</span>
                   <br />
-                  <span className='text-blue-600'>ACCOUNT</span>
+                  ACCOUNT
                 </h1>
 
                 <div className="flex flex-col justify-center items center xl:w-8/12 lg:w-10/12 md:w-10/12 mb-12 md:mb-0 mx-auto h-full">
