@@ -25,27 +25,28 @@ export default function Login() {
     else if (password === "") setError("Missing password")
     else {
       fetch(`http://localhost:4000/login`, {
-        method: 'POST',
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username, 
+          username,
           password,
-        })
+        }),
       })
       .then(handleErrors)
       .then(() => {
+        console.log("us, pas ", username, password);
         setCredentials({
           username,
+          password,
+        });
+        localStorage.setItem('user', JSON.stringify({
+          username,
           password
-        })
-        navigate("/todos"); //deprec history.push()
+        }))
+        navigate("/todos") //deprec history.push()
       })
-      .then(localStorage.setItem('user', JSON.stringify({
-        username,
-        password
-      })))
       .catch((error) => {
         setError(error.message)
       })

@@ -58,7 +58,9 @@ app.post("/register", async (req, res) => {
       });
       return;
     }
+
     await User.create({ username, password });
+
     res.json({  
       message: "success",
     });
@@ -77,7 +79,7 @@ app.post("/login", async (req, res) => {
       return;
     }
     //check password
-    if (user && user.password !== password) {
+    if (user && password !== user.password) {
       res.status(403);
       res.json({
         message: "Wrong password",
@@ -122,6 +124,7 @@ app.get("/todos", async (req, res) => {
   const { authorization } = req.headers;
   const [, token] = authorization.split(" ");
   const [username, password] = token.split(":");
+  console.log(username, password);
   const user = await User.findOne({ username }).exec();
   if (!user || user.password !== password) {
     res.status(403);
