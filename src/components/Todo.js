@@ -10,28 +10,24 @@ export default function Todo({ todo, toggleComplete, deleteTodo }) {
     }
 
   return (
-    <div className={todo.done ? "border-green-600 border-solid border-[1px] rounded my-6" : "border-blue-600 border-solid border-[1px] rounded my-6"}>
-      <div className="flex flex-row items-center px-7 py-3 my-0 text-black font-medium text-sm leading-snug uppercase hover:shadow-xl focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
-        {todo.done? (
+    <div className={`${todo.done ? "border-green-600"  : "border-blue-600 "} border-solid border-[1px] rounded my-4`}>
+      <div className="flex flex-row items-center px-4 py-3 my-0 text-black font-medium text-sm leading-snug uppercase hover:shadow-xl focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
           <button onClick={handleToggleClick} className="relative group rounded-full p-1 transition duration-150 hover:bg-slate-100 ease-in-out">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="w-6 h-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            {todo.done ? (
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
+            )}
             <div className="absolute z-10 py-1 px-2 whitespace-nowrap rounded-md bottom-[-35px] bg-slate-100 hidden group-hover:block transition delay-300">
-              Toggle not complete
+              {todo.done ? "Toggle not complete" : "Toggle complete"}
             </div>
           </button>
-        ) : (
-          <button onClick={handleToggleClick} className="relative group rounded-full p-1 transition duration-150 hover:bg-slate-100 ease-in-out">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="w-6 h-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-            </svg>
-            <div className="absolute z-10 py-1 px-2 whitespace-nowrap rounded-md bottom-[-35px] bg-slate-100 hidden group-hover:block transition delay-300">
-              Toggle complete
-            </div>
-          </button>
-        )}
-        <div className="w-full h-full text-justify flex items-start mx-2">
+
+        <div className="w-full h-full text-justify flex items-start mx-3  ">
           <label>{todo.text}</label>
         </div>
         <button onClick={handleDeleteClick} className="rounded-full p-1 transition duration-150 hover:bg-red-100 ease-in-out">

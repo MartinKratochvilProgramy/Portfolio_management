@@ -69,8 +69,7 @@ export default function Todos() {
   }
 
   function deleteTodo(id) {
-    const newTodoList = [...todos];
-    newTodoList.splice(id, 1)
+    const newTodoList = todos.filter((todo) => todo._id !== id);
     setTodos(newTodoList);
     persist(newTodoList);
   }
