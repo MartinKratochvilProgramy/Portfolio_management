@@ -9,7 +9,9 @@ node server.js
 ```
 Create new account, accounts are stored locally in a MongoDB.
 ![image](https://user-images.githubusercontent.com/94861828/193800275-4cc2442f-cfac-4adc-a605-20b18d20b05a.png)
+
 Create TODOs, mark them as done/undone.
+
 ![image](https://user-images.githubusercontent.com/94861828/193800288-3135ba29-f67a-456a-8561-73657f32e6e5.png)
 
 
