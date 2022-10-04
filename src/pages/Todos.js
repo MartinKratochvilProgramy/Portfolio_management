@@ -34,7 +34,6 @@ export default function Todos() {
 
   useEffect(() => {
     // send user home if not loged in
-    console.log("cred:", credentials);
     if (!credentials) {
       navigate("/");
       return;
@@ -64,7 +63,6 @@ export default function Todos() {
   function toggleTodo(id) {
     const newTodoList = [...todos];
     const todoToChange = newTodoList.find((todo) => todo._id === id);
-    console.log(newTodoList[0]._id);
     todoToChange.done = !todoToChange.done;
     setTodos(newTodoList);
     persist(newTodoList);

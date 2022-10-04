@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require('cors');
 const mongoose = require('mongoose');
+const bcrypt = require("bcrypt");
 const app = express();
 const port = 4000;
 
@@ -34,7 +35,8 @@ app.use(express.json());
 
 app.post("/register", async (req, res) => {
   // create user account, return 500 err if no password or username given
-    const {username, password} = req.body;
+    let {username, password} = req.body;
+
     if (username === '') {
       res.status(500);
       res.json({
@@ -58,7 +60,8 @@ app.post("/register", async (req, res) => {
       });
       return;
     }
-
+    const salt = await bcrypt.genSalt(10);
+    password = await bcrypt.hash(password, salt);
     await User.create({ username, password });
 
     res.json({  
@@ -79,7 +82,8 @@ app.post("/login", async (req, res) => {
       return;
     }
     //check password
-    if (user && password !== user.password) {
+    const passwordIsValid = await bcrypt.compare(password, user.password);
+    if (user && !passwordIsValid) {
       res.status(403);
       res.json({
         message: "Wrong password",
@@ -89,6 +93,8 @@ app.post("/login", async (req, res) => {
 
     res.json({
       message: "success",
+      username: username,
+      password: user.password
     });
 });
 
@@ -124,7 +130,6 @@ app.get("/todos", async (req, res) => {
   const { authorization } = req.headers;
   const [, token] = authorization.split(" ");
   const [username, password] = token.split(":");
-  console.log(username, password);
   const user = await User.findOne({ username }).exec();
   if (!user || user.password !== password) {
     res.status(403);

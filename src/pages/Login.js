@@ -35,8 +35,10 @@ export default function Login() {
         }),
       })
       .then(handleErrors)
-      .then(() => {
-        console.log("us, pas ", username, password);
+      .then(async (res) => {
+        const json = await res.json();
+        const username = json.username;
+        const password = json.password;
         setCredentials({
           username,
           password,
