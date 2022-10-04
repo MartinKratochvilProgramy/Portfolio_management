@@ -3,10 +3,12 @@ Clone the repo and install necessary packages by running:
 ```
 npm install
 ```
-Run the Express.js server by running
+Run the Express.js server by running:
 ```
 node server.js
 ```
+By default Express.js server runs in port 4000, client side at 3000.
+
 Create new account, accounts are stored locally in a MongoDB.
 ![image](https://user-images.githubusercontent.com/94861828/193800275-4cc2442f-cfac-4adc-a605-20b18d20b05a.png)
 
