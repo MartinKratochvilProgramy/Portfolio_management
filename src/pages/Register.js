@@ -29,17 +29,20 @@ export default function Register() {
         })
       })
       .then(handleErrors)
-      .then(() => {
+      .then(async (res) => {
+        const json = await res.json();
+        const username = json.username;
+        const password = json.password;
         setCredentials({
           username,
           password
         })
-        navigate("/"); //deprec history.push()
+        localStorage.setItem('user', JSON.stringify({
+          username,
+          password
+        }))
+        navigate("/todos"); //deprec history.push()
       })
-      .then(localStorage.setItem('user', JSON.stringify({
-        username,
-        password
-      })))
       .catch((error) => {
         setError(error.message)
       })
@@ -50,7 +53,7 @@ export default function Register() {
     // src: https://tailwind-elements.com/docs/standard/components/login-form/
     <div>
       <section className="h-screen">
-        <div className="px-6 h-full text-gray-800">
+        <div className="px-6 h-full text-gray-800 min-w-[355px]">
           <div className="flex xl:justify-center lg:justify-center justify-center items-center flex-wrap h-full g-6">
             <div className="xl:ml-20 xl:w-5/12 lg:w-5/12 md:w-8/12 mb-12 md:mb-0 h-full">
               <form onSubmit={register}>

@@ -66,6 +66,8 @@ app.post("/register", async (req, res) => {
 
     res.json({  
       message: "success",
+      username: username,
+      password: password
     });
 });
 

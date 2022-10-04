@@ -76,14 +76,16 @@ export default function Todos() {
   }
 
   return (
-    <div className="md:px-12 px-2 pt-8 lg:w-6/12 md:w-8/12 w-10/12 m-auto">
-      <form onSubmit={addTodo} className="flex flex-col space-y-4 items-center">   
+    <div className="md:px-12 px-2 pt-14 md:pt-1 lg:w-6/12 md:w-8/12 w-10/12 m-auto">
+      <form 
+        onSubmit={addTodo} 
+        className="flex flex-col space-y-4 items-center">   
           <label htmlFor ="add-todo" className="sr-only">Add todo</label>
           <div className="relative w-full h-full">
               <input 
                 type="text" 
                 id="add-todo" 
-                className="bg-gray-500 border h-max border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 focus:outline-none block w-full pl-4 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" 
+                className="bg-gray-100 border h-max border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 focus:outline-none block w-full pl-4 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" 
                 placeholder="Add new todo..." 
                 required="" 
                 onChange={(e) => {setTodoText(e.target.value)}} 
@@ -110,7 +112,7 @@ export default function Todos() {
     <br />
     <button
       type="submit"
-      className="fixed bottom-4 md:top-4 md:bottom-auto right-4 flex flex-row px-7 py-3 text-blue-600 border-solid border-blue-600 border-[1px] bg-white font-medium text-sm leading-snug uppercase rounded whitespace-nowrap shadow-md hover:bg-blue-700 hover:text-white hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+      className="fixed top-4 md:bottom-auto right-4 flex flex-row px-7 py-3 text-blue-600 border-solid border-blue-600 border-[1px] bg-white font-medium text-sm leading-snug uppercase rounded whitespace-nowrap shadow-md hover:bg-blue-700 hover:text-white hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
       onClick={logout}
     >
       Logout
