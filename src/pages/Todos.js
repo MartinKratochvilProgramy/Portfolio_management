@@ -84,7 +84,7 @@ export default function Todos() {
               <input 
                 type="text" 
                 id="add-todo" 
-                className="bg-gray-100 border h-max border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 focus:outline-none block w-full pl-4 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" 
+                className="bg-gray-100 border h-max border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 focus:outline-none block w-full pl-4 p-2.5" 
                 placeholder="Add new todo..." 
                 required="" 
                 onChange={(e) => {setTodoText(e.target.value)}} 
