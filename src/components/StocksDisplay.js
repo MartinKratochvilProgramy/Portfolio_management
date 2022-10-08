@@ -8,7 +8,7 @@ export default function Stocks({ stocks, setStocks }) {
 
   const persist = (stockToDelete) => {
     // hit the endpoint and write to db
-    fetch(`http://localhost:4000/stock_delete`, {
+    fetch(`http://localhost:4000/stock_remove`, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",

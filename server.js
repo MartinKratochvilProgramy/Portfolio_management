@@ -184,7 +184,7 @@ app.post("/stock_add", async (req, res) => {
   res.json(stocks.stocks);
 });
 
-app.post("/stock_delete", async (req, res) => {
+app.post("/stock_remove", async (req, res) => {
   // replace stocks
   const { authorization } = req.headers;
   const [, token] = authorization.split(" ");
