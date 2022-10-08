@@ -4,7 +4,7 @@ export default function DeleteStockModal({ setShowDeleteModal, deleteStock, stoc
     const [amountToRemove, setAmountToRemove] = useState(0);
 
     document.onkeydown = function (evt) {
-        if (evt.keyCode === 27) {
+        if (evt.key === "Escape") {
             // Escape key pressed
             setShowDeleteModal(false);
         }
