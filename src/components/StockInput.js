@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react'
 import { CredentialsContext } from '../App';
 import { handleErrors } from '../pages/Login';
 
-export default function StockInput() {
+export default function StockInput({ stocks, setStocks }) {
   const [stockTicker, setStockTicker] = useState('');
   const [stockAmount, setStockAmount] = useState(0);
   const [error, setError] = useState(false); 
@@ -42,8 +42,9 @@ export default function StockInput() {
       amountInput.classList.add('border-[1px]')
       return;
     }
-    const newStocks = {ticker: stockTicker, amount: stockAmount};
-    persist(newStocks);
+    const newStock = {ticker: stockTicker, amount: stockAmount};
+    setStocks([...stocks, newStock])
+    persist(newStock);
 
     setStockTicker('');
     setStockAmount(0);

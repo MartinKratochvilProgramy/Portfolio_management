@@ -22,23 +22,24 @@ export default function Portfolio() {
       navigate("/");
       return;
     };
-    // fetch todos on load
-    // fetch(`http://localhost:4000/todos`, {
-    //   method: 'GET',
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: `Basic ${credentials.username}:${credentials.password}`,
-    //   },
-    // })
-    // .then((response ) => response.json())
-    // .then((todos) => setTodos(todos));
+
+    fetch(`http://localhost:4000/stocks`, {
+      method: 'GET',
+      headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${credentials.username}:${credentials.password}`,
+      },
+      })
+      .then((response ) => response.json())
+      .then((stocks) => setStocks(stocks));
+
   }, [credentials, navigate]);
   
 
   return (
     <div className="">
-      <StockInput />
-      <Stocks />
+      <StockInput stocks={stocks} setStocks={setStocks}/>
+      <Stocks stocks={stocks}/>
       
        <button
         type="submit"
