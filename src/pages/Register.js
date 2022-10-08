@@ -41,7 +41,7 @@ export default function Register() {
           username,
           password
         }))
-        navigate("/todos"); //deprec history.push()
+        navigate("/portfolio"); //deprec history.push()
       })
       .catch((error) => {
         setError(error.message)

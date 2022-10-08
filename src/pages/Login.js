@@ -47,7 +47,7 @@ export default function Login() {
           username,
           password
         }))
-        navigate("/todos") //deprec history.push()
+        navigate("/portfolio") //deprec history.push()
       })
       .catch((error) => {
         setError(error.message)
@@ -69,7 +69,7 @@ export default function Login() {
                 <h1 className='text-3xl font-semibold mt-2 py-8 md:py-16 mb-0'>
                   SIMPLE WAY TO <span className='text-blue-600'>MANAGE</span>
                   <br />
-                  YOUR <span className='text-blue-600'>TODOS</span> DAILY
+                  YOUR <span className='text-blue-600'>INVESTMENTS</span> DAILY
                 </h1>
 
                 <div className="flex flex-col justify-center items center xl:w-8/12 lg:w-10/12 md:w-10/12 mb-12 md:mb-0 mx-auto h-full">

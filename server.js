@@ -1,11 +1,12 @@
 const express = require("express");
 const cors = require('cors');
+const fetch = require('node-fetch');
 const mongoose = require('mongoose');
 const bcrypt = require("bcrypt");
 const app = express();
 const port = 4000;
 
-mongoose.connect("mongodb://127.0.0.1:27017/todo", {
+mongoose.connect("mongodb://127.0.0.1:27017/portfolio", {
   useUnifiedTopology: true,
   useNewUrlParser: true,
 });
@@ -16,17 +17,22 @@ const userSchema = new mongoose.Schema({
 })
 const User = mongoose.model("User", userSchema);
 
-const todosSchema = new mongoose.Schema({
+const stocksSchema = new mongoose.Schema({
   username: String,
-  todos: [
+  stocks: [
     {
-      text: String,
-      done: Boolean,
-      _id: String
+      ticker: String,
+      amount: Number
     }
-  ]
+  ],
+  history: [
+    {
+      date: String,
+      value: Number
+    }
+  ],
 })
-const Todos = mongoose.model("Todos", todosSchema);
+const Stocks = mongoose.model("Stocks", stocksSchema);
 
 
 // allow localhost 3000 requests
@@ -100,12 +106,13 @@ app.post("/login", async (req, res) => {
     });
 });
 
-app.post("/todos", async (req, res) => {
+app.post("/stocks", async (req, res) => {
   // add todos to db
   const { authorization } = req.headers;
   const [, token] = authorization.split(" ");
   const [username, password] = token.split(":");
-  const todosItems = req.body.newTodos;
+  const stockItems = req.body.newStocks;
+  // auth user, if not found, return
   const user = await User.findOne({ username }).exec();
   if (!user || user.password !== password) {
     res.status(403);
@@ -114,20 +121,66 @@ app.post("/todos", async (req, res) => {
     });
     return;
   }
-  const todos = await Todos.findOne({ username: username }).exec();
-  if (!todos) {
-    await Todos.create({
+  const stocks = await Stocks.findOne({ username: username }).exec();
+  // get date
+  const currentdate = new Date(); 
+  const today =     currentdate.getFullYear() + "-"
+                  + (currentdate.getMonth()+1)  + "-" 
+                  + currentdate.getDate() + " "  
+                  + currentdate.getHours() + ":"  
+                  + currentdate.getMinutes()
+  // get ticker, if not exists, return
+  const stockInfo = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${stockItems.ticker}`)
+  const stockInfoJson = await stockInfo.json()
+  if (!stockInfoJson.chart.result) {
+    res.status(403);
+    res.json({
+      message: "Stock not found",
+    });
+    return;
+  }
+  const conversionRate = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${stockInfoJson.chart.result[0].meta.currency}USD=X`)
+  const conversionRateJson = await conversionRate.json();
+  
+  const centValue = parseInt(stockInfoJson.chart.result[0].meta.previousClose * 100 * conversionRateJson.chart.result[0].meta.previousClose);
+
+  if (!stocks) {
+    // if no stock history, create new
+    await Stocks.create({
       username: username,
-      todos: todosItems
+      stocks: [{
+        ticker: stockItems.ticker, 
+        amount: stockItems.amount
+      }],
+      history: [{
+        value: centValue * stockItems.amount,
+        date: today
+      }]
     });
   } else {
-    todos.todos = todosItems;
-    await todos.save();
+    // if stock history, push to existing db
+    const stockIndex = stocks.stocks.map(item => item.ticker).indexOf(stockItems.ticker);
+    if (stockIndex === -1) {
+      // stock does not exist, push new
+      stocks.stocks.push({
+        ticker: stockItems.ticker, 
+        amount: stockItems.amount
+      });
+    } else {
+      // stock exists, add amount
+      stocks.stocks[stockIndex].amount += parseInt(stockItems.amount);
+    }
+
+    stocks.history.push({
+      value: stocks.history.slice(-1)[0].value + centValue * stockItems.amount,
+      date: today
+    })
+    await stocks.save();
   }
-  res.json(todosItems);
+  res.json(stockItems);
 });
 
-app.get("/todos", async (req, res) => {
+app.get("/stocks", async (req, res) => {
   // send todos to client
   const { authorization } = req.headers;
   const [, token] = authorization.split(" ");

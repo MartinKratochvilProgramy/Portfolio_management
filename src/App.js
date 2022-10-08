@@ -7,7 +7,7 @@ import {
 import React, { useState } from "react";
 import Register from './pages/Register';
 import Login from './pages/Login';
-import Todos from './pages/Todos';
+import Portfolio from './pages/Portfolio';
 
 export const CredentialsContext = React.createContext();
 
@@ -22,7 +22,7 @@ function App() {
           <Routes>
             <Route exact path='/' element={<Login  />}></Route>
             <Route exact path='/register' element={<Register />}></Route>
-            <Route exact path='/todos' element={<Todos />}></Route>
+            <Route exact path='/portfolio' element={<Portfolio />}></Route>
           </Routes> 
         </Router>
       </CredentialsContext.Provider>
