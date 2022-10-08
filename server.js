@@ -193,10 +193,10 @@ app.get("/stocks", async (req, res) => {
     });
     return;
   }
-  const foundTodos = await Todos.findOne({ username: username }).exec();
-  if (foundTodos) {
-    const { todos } = foundTodos;
-    res.json(todos);
+  const foundStocks = await Stocks.findOne({ username: username }).exec();
+  if (foundStocks) {
+    const stocks = foundStocks.stocks;
+    res.json(stocks);
   } else {
     res.json([]);
   }
