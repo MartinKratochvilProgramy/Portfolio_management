@@ -1,20 +1,30 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 export default function DeleteStockModal({ setShowDeleteModal, deleteStock, stock }) {
     const [amountToRemove, setAmountToRemove] = useState(0);
 
     document.onkeydown = function (evt) {
-        if (evt.keyCode == 27) {
+        if (evt.keyCode === 27) {
             // Escape key pressed
             setShowDeleteModal(false);
         }
     }
 
+    useEffect(() => {
+        const modalAmountInput = document.getElementById('modal-amount-input');
+        modalAmountInput.classList.add('border-gray-300');
+        modalAmountInput.classList.remove('border-red-400');
+    }, [amountToRemove])
+    
+
     function submit(e) {
         e.preventDefault();
+        console.log(stock.amount - amountToRemove);
         if (stock.amount - amountToRemove < 0 || amountToRemove < 0) {
             // display red around input if negative amount
+            console.log("too much");
             const modalAmountInput = document.getElementById('modal-amount-input');
+            modalAmountInput.classList.remove('border-gray-300');
             modalAmountInput.classList.add('border-red-400');
             return;
         }
@@ -56,7 +66,7 @@ export default function DeleteStockModal({ setShowDeleteModal, deleteStock, stoc
                     </div>
                     <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                     <button 
-                        type="button" 
+                        type="submit" 
                         className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm">
                         Remove
                     </button>

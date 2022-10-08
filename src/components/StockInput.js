@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext } from 'react'
 import { CredentialsContext } from '../App';
 import { handleErrors } from '../pages/Login';
 
@@ -6,21 +6,24 @@ export default function StockInput({ stocks, setStocks }) {
   const [stockTicker, setStockTicker] = useState('');
   const [stockAmount, setStockAmount] = useState(0);
   const [error, setError] = useState(false); 
-  const [credentials, setCredentials] = useContext(CredentialsContext);
+  const [credentials, ] = useContext(CredentialsContext);
   
-  const persist = (newStocks) => {
+  const persist = (newStock) => {
     // hit the endpoint and write to db
-    fetch(`http://localhost:4000/stocks`, {
+    // returns the new stocks
+    fetch(`http://localhost:4000/stock_add`, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Basic ${credentials.username}:${credentials.password}`
       },
       body: JSON.stringify({
-        newStocks, 
+        newStock, 
       })
     })
     .then(handleErrors)
+    .then((response ) => response.json())
+    .then((returnedStocks) => setStocks(returnedStocks))
     .catch((error) => {
       setError(error.message)
     })
@@ -35,15 +38,13 @@ export default function StockInput({ stocks, setStocks }) {
       tickerInput.classList.remove('border-gray-300')
       return;
     }
-    if (stockAmount === 0) {
+    if (stockAmount <= 0) {
       const amountInput = document.getElementById('amount-input');
-      amountInput.classList.add('border-solid')
       amountInput.classList.add('border-red-400')
-      amountInput.classList.add('border-[1px]')
+      amountInput.classList.remove('border-gray-300')
       return;
     }
     const newStock = {ticker: stockTicker, amount: stockAmount};
-    setStocks([...stocks, newStock])
     persist(newStock);
 
     setStockTicker('');
@@ -73,16 +74,17 @@ export default function StockInput({ stocks, setStocks }) {
               <input 
                 type="text" 
                 id="ticker-input" 
-                className="bg-gray-100 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 focus:outline-none block w-full pl-4 p-2.5" 
+                className="bg-gray-100 border border-gray-300 text-gray-900 text-sm focus:outline-none block w-full pl-4 p-2.5" 
                 placeholder="Add new stocks..." 
                 required="" 
                 onChange={onTickerInputChange} 
                 value={stockTicker}
-              />
+                />
               <input 
                 type="number" 
                 id="amount-input" 
-                className="bg-gray-100 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 focus:outline-none block w-full pl-4 p-2.5" 
+                className="bg-gray-100 border border-gray-300 text-gray-900 text-sm focus:outline-none block w-full pl-4 p-2.5" 
+                // className="border border-gray-300 p-2 my-2 outline-red-300 focus:outline-none" 
                 placeholder="Amount..." 
                 required="" 
                 onChange={onAmountInputChange} 

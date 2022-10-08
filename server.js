@@ -106,13 +106,12 @@ app.post("/login", async (req, res) => {
     });
 });
 
-app.post("/stocks", async (req, res) => {
+app.post("/stock_add", async (req, res) => {
   // add stocks to db
   const { authorization } = req.headers;
   const [, token] = authorization.split(" ");
   const [username, password] = token.split(":");
-  const stockItems = req.body.newStocks;
-  console.log("add: ", stockItems);
+  const stockItems = req.body.newStock;
   // auth user, if not found, return
   const user = await User.findOne({ username }).exec();
   if (!user || user.password !== password) {
@@ -122,7 +121,7 @@ app.post("/stocks", async (req, res) => {
     });
     return;
   }
-  const stocks = await Stocks.findOne({ username: username }).exec();
+
   // get date
   const currentdate = new Date(); 
   const today =     currentdate.getFullYear() + "-"
@@ -144,9 +143,10 @@ app.post("/stocks", async (req, res) => {
   const conversionRateJson = await conversionRate.json();
   
   const centValue = parseInt(stockInfoJson.chart.result[0].meta.previousClose * 100 * conversionRateJson.chart.result[0].meta.previousClose);
-
+  
+  const stocks = await Stocks.findOne({ username: username }).exec();
   if (!stocks) {
-    // if no stock history, create new
+    // if no stock history (first commit), create new
     await Stocks.create({
       username: username,
       stocks: [{
@@ -158,10 +158,12 @@ app.post("/stocks", async (req, res) => {
         date: today
       }]
     });
+    res.json([{ticker: stockItems.ticker, amount: stockItems.amount}]);
+    return;
+
   } else {
     // if stock history, push to existing db
     const stockIndex = stocks.stocks.map(item => item.ticker).indexOf(stockItems.ticker);
-    console.log(stockIndex);
     if (stockIndex === -1) {
       // stock does not exist, push new
       stocks.stocks.push({
@@ -170,9 +172,6 @@ app.post("/stocks", async (req, res) => {
       });
     } else {
       // stock exists, add amount
-      console.log(stocks.stocks[stockIndex].amount);
-      console.log(stockItems.amount);
-
       stocks.stocks[stockIndex].amount += parseInt(stockItems.amount);
     }
 
@@ -182,16 +181,15 @@ app.post("/stocks", async (req, res) => {
     })
     await stocks.save();
   }
-  res.json(stockItems);
+  res.json(stocks.stocks);
 });
 
-app.post("/stocks_delete", async (req, res) => {
+app.post("/stock_delete", async (req, res) => {
   // replace stocks
   const { authorization } = req.headers;
   const [, token] = authorization.split(" ");
   const [username, password] = token.split(":");
-  const stockItems = req.body.newStocks;
-  console.log("del: ", stockItems);
+  const stockItems = req.body.stockToDelete;
   // auth user, if not found, return
   const user = await User.findOne({ username }).exec();
   if (!user || user.password !== password) {
@@ -201,13 +199,20 @@ app.post("/stocks_delete", async (req, res) => {
     });
     return;
   }
+
   const stocks = await Stocks.findOne({ username: username }).exec();
 
-  if (stocks) {
-    stocks.stocks = stockItems;
-    await stocks.save();
+  if (stockItems.amount === 0) {
+    // if new amt = old amt, remove stock from db
+    await Stocks.updateOne({ username: username }, { $pull: { stocks: { ticker: stockItems.ticker } } }).exec();
+  
+  } else if (stockItems.amount > 0) {
+    const stockIndex = stocks.stocks.map(item => item.ticker).indexOf(stockItems.ticker);
+    stocks.stocks[stockIndex].amount = parseInt(stockItems.amount);
   }
-  res.json(stockItems);
+  await stocks.save();
+  res.json(stocks.stocks);
+
 });
 
 app.get("/stocks", async (req, res) => {

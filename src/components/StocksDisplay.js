@@ -1,47 +1,31 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, {  useContext } from 'react'
 import Stock from './Stock';
 import { CredentialsContext } from '../App';
 
 export default function Stocks({ stocks, setStocks }) {
 
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteModalValue, setDeleteModalValue] = useState(null);
-  const [credentials, setCredentials] = useContext(CredentialsContext);
+  const [credentials, ] = useContext(CredentialsContext);
 
-  function displayModal(e) {
-    setShowDeleteModal(true);
-    setDeleteModalValue(e.currentTarget.id);
-  }
-
-  const persist = (newStocks) => {
+  const persist = (stockToDelete) => {
     // hit the endpoint and write to db
-    fetch(`http://localhost:4000/stocks_delete`, {
+    fetch(`http://localhost:4000/stock_delete`, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Basic ${credentials.username}:${credentials.password}`
       },
       body: JSON.stringify({
-        newStocks, 
+        stockToDelete, 
       })
     })
+    .then((response ) => response.json())
+    .then((returnedStocks) => setStocks(returnedStocks))
   };
 
   function deleteStock(ticker, newAmount) {
-    var newStocks = stocks;
-    if (newAmount === 0) {
-      // remove stock
-      newStocks = newStocks.filter(stock => {return stock.ticker !== ticker})
-    } else {
-      newStocks.map(stock => {
-        if (stock.ticker === ticker) {
-          stock.amount = newAmount;
-        }
-      });
-    }
+    const stockToDelete = {ticker: ticker, amount: newAmount};
     
-    setStocks(newStocks);
-    persist(newStocks);
+    persist(stockToDelete);
   }
 
   return (
@@ -52,12 +36,10 @@ export default function Stocks({ stocks, setStocks }) {
             <Stock 
               stock={stock} 
               key={stock.ticker} 
-              displayModal={displayModal}
               deleteStock={deleteStock}
               />
         )
       })}
-      {/* {showDeleteModal ? <DeleteStockModal setShowDeleteModal={setShowDeleteModal} deleteModalValue={deleteModalValue} deleteStock={deleteStock}/> : null} */}
   </div>
   )
 }
