@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react'
 import { CredentialsContext } from '../App';
 import { useNavigate  } from 'react-router-dom';
 import StockInput from '../components/StockInput';
-import Stocks from '../components/Stocks';
+import StocksDisplay from '../components/StocksDisplay';
 
 export default function Portfolio() {
   const [credentials, setCredentials] = useContext(CredentialsContext);
@@ -39,7 +39,7 @@ export default function Portfolio() {
   return (
     <div className="">
       <StockInput stocks={stocks} setStocks={setStocks}/>
-      <Stocks stocks={stocks}/>
+      <StocksDisplay stocks={stocks} setStocks={setStocks}/>
       
        <button
         type="submit"

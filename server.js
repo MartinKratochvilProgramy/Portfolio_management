@@ -107,11 +107,12 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/stocks", async (req, res) => {
-  // add todos to db
+  // add stocks to db
   const { authorization } = req.headers;
   const [, token] = authorization.split(" ");
   const [username, password] = token.split(":");
   const stockItems = req.body.newStocks;
+  console.log("add: ", stockItems);
   // auth user, if not found, return
   const user = await User.findOne({ username }).exec();
   if (!user || user.password !== password) {
@@ -160,6 +161,7 @@ app.post("/stocks", async (req, res) => {
   } else {
     // if stock history, push to existing db
     const stockIndex = stocks.stocks.map(item => item.ticker).indexOf(stockItems.ticker);
+    console.log(stockIndex);
     if (stockIndex === -1) {
       // stock does not exist, push new
       stocks.stocks.push({
@@ -168,6 +170,9 @@ app.post("/stocks", async (req, res) => {
       });
     } else {
       // stock exists, add amount
+      console.log(stocks.stocks[stockIndex].amount);
+      console.log(stockItems.amount);
+
       stocks.stocks[stockIndex].amount += parseInt(stockItems.amount);
     }
 
@@ -175,6 +180,31 @@ app.post("/stocks", async (req, res) => {
       value: stocks.history.slice(-1)[0].value + centValue * stockItems.amount,
       date: today
     })
+    await stocks.save();
+  }
+  res.json(stockItems);
+});
+
+app.post("/stocks_delete", async (req, res) => {
+  // replace stocks
+  const { authorization } = req.headers;
+  const [, token] = authorization.split(" ");
+  const [username, password] = token.split(":");
+  const stockItems = req.body.newStocks;
+  console.log("del: ", stockItems);
+  // auth user, if not found, return
+  const user = await User.findOne({ username }).exec();
+  if (!user || user.password !== password) {
+    res.status(403);
+    res.json({
+      message: "invalid access",
+    });
+    return;
+  }
+  const stocks = await Stocks.findOne({ username: username }).exec();
+
+  if (stocks) {
+    stocks.stocks = stockItems;
     await stocks.save();
   }
   res.json(stockItems);

@@ -1,5 +1,5 @@
-const arr = [{one: "one"}, {one: "two"}];
+var a = [{one: 'one'}, {one: 'two;'}]
 
-const pos = arr.map(item => item.ticker).indexOf('two');
+a = a.filter(item => {return item.one !== 'one'})
 
-console.log(pos);
+console.log(a);
