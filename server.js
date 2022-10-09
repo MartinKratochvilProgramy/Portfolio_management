@@ -124,7 +124,7 @@ app.post("/stock_add", async (req, res) => {
   if (!stockInfoJson.chart.result) {
     res.status(403);
     res.json({
-      message: "Stock not found",
+      message: "Ticker not found",
     });
     return;
   }

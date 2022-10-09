@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import { CredentialsContext } from '../App';
 import { handleErrors } from '../pages/Login';
 
-export default function StockInput({ stocks, setStocks }) {
+export default function StockInput({ setStocks }) {
   const [stockTicker, setStockTicker] = useState('');
   const [stockAmount, setStockAmount] = useState(0);
   const [error, setError] = useState(false); 
@@ -10,7 +10,7 @@ export default function StockInput({ stocks, setStocks }) {
   
   const persist = (newStock) => {
     // hit the endpoint and write to db
-    // returns the new stocks
+    // returns the new stocks array
     fetch(`http://localhost:4000/stock_add`, {
       method: 'POST',
       headers: {
@@ -30,6 +30,7 @@ export default function StockInput({ stocks, setStocks }) {
   };
 
   const addStock = (e) => {
+    // get stock ticker, amount and send to server
     e.preventDefault();
     
     if (stockTicker === '') {
@@ -65,7 +66,6 @@ export default function StockInput({ stocks, setStocks }) {
 
   return (
     <div className="md:px-12 px-2 pt-14 md:pt-1 lg:w-6/12 md:w-8/12 w-10/12 m-auto">
-
       <form 
         onSubmit={addStock} 
         className="flex flex-col space-y-4 items-center">   
@@ -77,7 +77,7 @@ export default function StockInput({ stocks, setStocks }) {
               <input 
                 type="text" 
                 id="ticker-input" 
-                className="bg-gray-100 border w-10/12 border-gray-300 text-gray-900 text-sm focus:outline-none block pl-4 p-2.5" 
+                className="bg-gray-100 border w-auto border-gray-300 text-gray-900 text-sm focus:outline-none block pl-4 p-2.5" 
                 placeholder="Ticker..." 
                 required="" 
                 autoFocus
@@ -87,8 +87,7 @@ export default function StockInput({ stocks, setStocks }) {
               <input 
                 type="number" 
                 id="amount-input" 
-                className="bg-gray-100 border border-gray-300 text-gray-900 text-sm focus:outline-none block w-auto pl-4 p-2.5" 
-                // className="border border-gray-300 p-2 my-2 outline-red-300 focus:outline-none" 
+                className="bg-gray-100 border w-4/12 border-gray-300 text-gray-900 text-sm focus:outline-none block pl-4 p-2.5" 
                 placeholder="Amount..." 
                 required="" 
                 onChange={onAmountInputChange} 
@@ -101,9 +100,7 @@ export default function StockInput({ stocks, setStocks }) {
               Add stocks
           </button>
       </form>
-
       {error && (<span className='font-semibold text-xl text-red-600 hover:text-red-700 focus:text-red-700 transition duration-200 ease-in-out'>{error}<br /></span>)}
-
   </div>
   )
 }

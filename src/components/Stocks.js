@@ -23,7 +23,7 @@ export default function Stocks() {
 
   return (
     <div>
-      <StockInput stocks={stocks} setStocks={setStocks}/>
+      <StockInput setStocks={setStocks}/>
       <StocksDisplay stocks={stocks} setStocks={setStocks}/>
     </div>
   )

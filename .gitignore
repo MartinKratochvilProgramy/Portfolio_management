@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 scratch.js
+todo.txt
 
 # testing
 /coverage
