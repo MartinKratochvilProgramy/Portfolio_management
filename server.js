@@ -6,6 +6,9 @@ const bcrypt = require("bcrypt");
 const app = express();
 const port = 4000;
 
+app.use(cors()); // allow localhost 3000 requests
+app.use(express.json());
+
 mongoose.connect("mongodb://127.0.0.1:27017/portfolio", {
   useUnifiedTopology: true,
   useNewUrlParser: true,
@@ -22,7 +25,8 @@ const stocksSchema = new mongoose.Schema({
   stocks: [
     {
       ticker: String,
-      amount: Number
+      amount: Number,
+      prevClose: Number,
     }
   ],
   history: [
@@ -33,11 +37,6 @@ const stocksSchema = new mongoose.Schema({
   ],
 })
 const Stocks = mongoose.model("Stocks", stocksSchema);
-
-
-// allow localhost 3000 requests
-app.use(cors());
-app.use(express.json());
 
 app.post("/register", async (req, res) => {
   // create user account, return 500 err if no password or username given
@@ -142,7 +141,7 @@ app.post("/stock_add", async (req, res) => {
   const conversionRate = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${stockInfoJson.chart.result[0].meta.currency}USD=X`)
   const conversionRateJson = await conversionRate.json();
   
-  const centValue = parseInt(stockInfoJson.chart.result[0].meta.previousClose * 100 * conversionRateJson.chart.result[0].meta.previousClose);
+  const value = (stockInfoJson.chart.result[0].meta.previousClose * conversionRateJson.chart.result[0].meta.previousClose).toFixed(2);
   
   const stocks = await Stocks.findOne({ username: username }).exec();
   if (!stocks) {
@@ -151,10 +150,11 @@ app.post("/stock_add", async (req, res) => {
       username: username,
       stocks: [{
         ticker: stockItems.ticker, 
-        amount: stockItems.amount
+        amount: stockItems.amount,
+        prevClose: value,
       }],
       history: [{
-        value: centValue * stockItems.amount,
+        value: value * stockItems.amount,
         date: today
       }]
     });
@@ -168,7 +168,8 @@ app.post("/stock_add", async (req, res) => {
       // stock does not exist, push new
       stocks.stocks.push({
         ticker: stockItems.ticker, 
-        amount: stockItems.amount
+        amount: stockItems.amount,
+        prevClose: value,
       });
     } else {
       // stock exists, add amount
@@ -176,7 +177,7 @@ app.post("/stock_add", async (req, res) => {
     }
 
     stocks.history.push({
-      value: stocks.history.slice(-1)[0].value + centValue * stockItems.amount,
+      value: stocks.history.slice(-1)[0].value + value * stockItems.amount,
       date: today
     })
     await stocks.save();
@@ -212,6 +213,25 @@ app.post("/stock_remove", async (req, res) => {
   }
   await stocks.save();
   res.json(stocks.stocks);
+
+});
+
+app.post("/update", async (req, res) => {
+  // replace stocks
+  const { authorization } = req.headers;
+  const [, token] = authorization.split(" ");
+  const [username, password] = token.split(":");
+  // auth user, if not found, return
+  const user = await User.findOne({ username }).exec();
+  if (!user || user.password !== password) {
+    res.status(403);
+    res.json({
+      message: "invalid access",
+    });
+    return;
+  }
+
+
 
 });
 

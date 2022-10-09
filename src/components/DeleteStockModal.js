@@ -5,12 +5,12 @@ export default function DeleteStockModal({ setShowDeleteModal, deleteStock, stoc
 
     document.onkeydown = function (evt) {
         if (evt.key === "Escape") {
-            // Escape key pressed
             setShowDeleteModal(false);
         }
     }
 
     useEffect(() => {
+        // reset red border from error
         const modalAmountInput = document.getElementById('modal-amount-input');
         modalAmountInput.classList.add('border-gray-300');
         modalAmountInput.classList.remove('border-red-400');
@@ -21,7 +21,7 @@ export default function DeleteStockModal({ setShowDeleteModal, deleteStock, stoc
         e.preventDefault();
         console.log(stock.amount - amountToRemove);
         if (stock.amount - amountToRemove < 0 || amountToRemove < 0) {
-            // display red around input if negative amount
+            // display red around input and return if invalid amount
             console.log("too much");
             const modalAmountInput = document.getElementById('modal-amount-input');
             modalAmountInput.classList.remove('border-gray-300');

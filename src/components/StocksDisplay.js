@@ -24,14 +24,12 @@ export default function Stocks({ stocks, setStocks }) {
 
   function deleteStock(ticker, newAmount) {
     const stockToDelete = {ticker: ticker, amount: newAmount};
-    
     persist(stockToDelete);
   }
 
   return (
     <div className="md:px-12 px-2 pt-14 md:pt-1 lg:w-6/12 md:w-8/12 w-10/12 m-auto">
       {stocks.map((stock) => {
-        if (stock.amount === 0) return;
         return (
             <Stock 
               stock={stock} 

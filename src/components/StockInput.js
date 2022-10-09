@@ -52,15 +52,15 @@ export default function StockInput({ stocks, setStocks }) {
   }
 
   const onTickerInputChange = (e) => {
-    e.target.classList.remove('border-red-400')
-    e.target.classList.add('border-gray-300')
-    setStockTicker(e.target.value)
+    e.target.classList.remove('border-red-400');
+    e.target.classList.add('border-gray-300');
+    setStockTicker(e.target.value);
   }
 
   const onAmountInputChange = (e) => {
-    e.target.classList.remove('border-red-400')
-    e.target.classList.add('border-gray-300')
-    setStockAmount(e.target.value)
+    e.target.classList.remove('border-red-400');
+    e.target.classList.add('border-gray-300');
+    setStockAmount(e.target.value);
   }
 
   return (
@@ -70,20 +70,24 @@ export default function StockInput({ stocks, setStocks }) {
         onSubmit={addStock} 
         className="flex flex-col space-y-4 items-center">   
           <label htmlFor ="add-stock" className="sr-only">Add stock</label>
-          <div className="relative flex flex-row w-full h-full">
+          <h1 className='text-3xl font-semibold mt-2 py-4 md:py-4 mb-0'>
+            ADD NEW <span className='text-blue-600'>STOCK</span>
+          </h1>
+          <div className="relative flex flex-row w-1/2 h-full">
               <input 
                 type="text" 
                 id="ticker-input" 
-                className="bg-gray-100 border border-gray-300 text-gray-900 text-sm focus:outline-none block w-full pl-4 p-2.5" 
-                placeholder="Add new stocks..." 
+                className="bg-gray-100 border w-10/12 border-gray-300 text-gray-900 text-sm focus:outline-none block pl-4 p-2.5" 
+                placeholder="Ticker..." 
                 required="" 
+                autoFocus
                 onChange={onTickerInputChange} 
                 value={stockTicker}
                 />
               <input 
                 type="number" 
                 id="amount-input" 
-                className="bg-gray-100 border border-gray-300 text-gray-900 text-sm focus:outline-none block w-full pl-4 p-2.5" 
+                className="bg-gray-100 border border-gray-300 text-gray-900 text-sm focus:outline-none block w-auto pl-4 p-2.5" 
                 // className="border border-gray-300 p-2 my-2 outline-red-300 focus:outline-none" 
                 placeholder="Amount..." 
                 required="" 

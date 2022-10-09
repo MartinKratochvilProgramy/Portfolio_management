@@ -1,12 +1,11 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { CredentialsContext } from '../App';
 import { useNavigate  } from 'react-router-dom';
-import StockInput from '../components/StockInput';
-import StocksDisplay from '../components/StocksDisplay';
+import Stocks from '../components/Stocks';
 
 export default function Portfolio() {
   const [credentials, setCredentials] = useContext(CredentialsContext);
-  const [stocks, setStocks] = useState([])
+
   
   const navigate = useNavigate();
 
@@ -23,23 +22,13 @@ export default function Portfolio() {
       return;
     };
 
-    fetch(`http://localhost:4000/stocks`, {
-      method: 'GET',
-      headers: {
-          "Content-Type": "application/json",
-          Authorization: `Basic ${credentials.username}:${credentials.password}`,
-      },
-      })
-      .then((response ) => response.json())
-      .then((stocks) => setStocks(stocks));
-
   }, [credentials, navigate]);
   
 
   return (
     <div className="">
-      <StockInput stocks={stocks} setStocks={setStocks}/>
-      <StocksDisplay stocks={stocks} setStocks={setStocks}/>
+
+      <Stocks />
       
        <button
         type="submit"

@@ -10,8 +10,9 @@ export default function Stock({ stock, deleteStock }) {
       <div className="flex flex-row items-center px-4 py-3 my-0 text-black font-medium text-sm leading-snug uppercase hover:shadow-xl focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
 
         <div className="w-full h-full text-justify flex items-start mx-3  ">
-          <div className="w-16">{stock.ticker}</div>
-          <div>{stock.amount}</div>
+          <div className="w-16 font-bold">{stock.ticker}</div>
+          <div className="w-6">{stock.amount}</div>
+          <div className="ml-6">{stock.prevClose} USD</div>
         </div>
         <button onClick={() => {setShowDeleteModal(true)}} id={stock.ticker} className="rounded-full p-1 transition duration-150 hover:bg-red-100 ease-in-out">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="w-6 h-6">
