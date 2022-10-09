@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 const app = express();
 const port = 4000;
 
-app.use(cors()); // allow localhost 3000 requests
+app.use(cors()); // allow localhost 3000 (client) requests
 app.use(express.json());
 
 mongoose.connect("mongodb://127.0.0.1:27017/portfolio", {
@@ -40,95 +40,85 @@ const Stocks = mongoose.model("Stocks", stocksSchema);
 
 app.post("/register", async (req, res) => {
   // create user account, return 500 err if no password or username given
-    let {username, password} = req.body;
+  let {username, password} = req.body;
 
-    if (username === '') {
-      res.status(500);
-      res.json({
-        message: "Username empty",
-      });
-      return;
-    }
-    if (password === '') {
-      res.status(500);
-      res.json({
-        message: "Password empty",
-      });
-      return;
-    }
-    // find if user exists, if yes send 500 err
-    const user = await User.findOne({ username }).exec();
-    if (user) {
-      res.status(500);
-      res.json({
-        message: "User already exists",
-      });
-      return;
-    }
-    const salt = await bcrypt.genSalt(10);
-    password = await bcrypt.hash(password, salt);
-    await User.create({ username, password });
-
-    res.json({  
-      message: "success",
-      username: username,
-      password: password
+  // find if user exists, if yes send 500 err
+  const user = await User.findOne({ username }).exec();
+  if (user) {
+    res.status(500);
+    res.json({
+      message: "User already exists",
     });
+    return;
+  }
+  // create user in db with hashed password
+  const salt = await bcrypt.genSalt(10);
+  password = await bcrypt.hash(password, salt);
+  await User.create({ username, password });
+
+  res.json({  
+    message: "Success",
+    username: username,
+    password: password
+  });
 });
 
 app.post("/login", async (req, res) => {
-  // create user account
-    const {username, password} = req.body;
-    // find if user exists, if not send back 403 err
-    const user = await User.findOne({ username }).exec();
-    if (!user) {
-      res.status(403);
-      res.json({
-        message: "User does not exist",
-      });
-      return;
-    }
-    //check password
-    const passwordIsValid = await bcrypt.compare(password, user.password);
-    if (user && !passwordIsValid) {
-      res.status(403);
-      res.json({
-        message: "Wrong password",
-      });
-      return;
-    }
+  // validate user account on login
 
-    res.json({
-      message: "success",
-      username: username,
-      password: user.password
-    });
-});
-
-app.post("/stock_add", async (req, res) => {
-  // add stocks to db
-  const { authorization } = req.headers;
-  const [, token] = authorization.split(" ");
-  const [username, password] = token.split(":");
-  const stockItems = req.body.newStock;
-  // auth user, if not found, return
+  const {username, password} = req.body;
+  // find if user exists, if not send back 403 err
   const user = await User.findOne({ username }).exec();
-  if (!user || user.password !== password) {
+  if (!user) {
     res.status(403);
     res.json({
-      message: "invalid access",
+      message: "User does not exist",
+    });
+    return;
+  }
+  // validate password, if invalid send back 403 err
+  const passwordIsValid = await bcrypt.compare(password, user.password);
+  if (user && !passwordIsValid) {
+    res.status(403);
+    res.json({
+      message: "Wrong password",
     });
     return;
   }
 
-  // get date
+  res.json({
+    message: "Success",
+    username: username,
+    password: user.password
+  });
+});
+
+app.post("/stock_add", async (req, res) => {
+  // add stock to db
+  const { authorization } = req.headers;  // username, password
+  const stockItems = req.body.newStock;   // new stock object
+
+  // get username password from headers
+  const [, token] = authorization.split(" ");
+  const [username, password] = token.split(":");
+  // auth user, if not found send back 403 err
+  const user = await User.findOne({ username }).exec();
+  if (!user || user.password !== password) {
+    res.status(403);
+    res.json({
+      message: "Invalid access",
+    });
+    return;
+  }
+
+  // get current date
   const currentdate = new Date(); 
   const today =     currentdate.getFullYear() + "-"
                   + (currentdate.getMonth()+1)  + "-" 
                   + currentdate.getDate() + " "  
                   + currentdate.getHours() + ":"  
                   + currentdate.getMinutes()
-  // get ticker, if not exists, return
+  // get stocks ticker, if not exists, return
   const stockInfo = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${stockItems.ticker}`)
   const stockInfoJson = await stockInfo.json()
   if (!stockInfoJson.chart.result) {
@@ -138,14 +128,18 @@ app.post("/stock_add", async (req, res) => {
     });
     return;
   }
+  // get conversion rate from set currency -> dollar
+  // TODO: add a way for the user to select his own currency
   const conversionRate = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${stockInfoJson.chart.result[0].meta.currency}USD=X`)
   const conversionRateJson = await conversionRate.json();
   
+  // prev close value of stock in set currency
+  // TODO: add a way for the user to select his own currency
   const value = (stockInfoJson.chart.result[0].meta.previousClose * conversionRateJson.chart.result[0].meta.previousClose).toFixed(2);
   
   const stocks = await Stocks.findOne({ username: username }).exec();
   if (!stocks) {
-    // if no stock history (first commit), create new
+    // if no stock history (first commit), create new object
     await Stocks.create({
       username: username,
       stocks: [{
@@ -165,14 +159,14 @@ app.post("/stock_add", async (req, res) => {
     // if stock history, push to existing db
     const stockIndex = stocks.stocks.map(item => item.ticker).indexOf(stockItems.ticker);
     if (stockIndex === -1) {
-      // stock does not exist, push new
+      // stock ticker does not exist, push new
       stocks.stocks.push({
         ticker: stockItems.ticker, 
         amount: stockItems.amount,
         prevClose: value,
       });
     } else {
-      // stock exists, add amount
+      // stock ticker exists, add amount to existing object
       stocks.stocks[stockIndex].amount += parseInt(stockItems.amount);
     }
 
@@ -186,12 +180,14 @@ app.post("/stock_add", async (req, res) => {
 });
 
 app.post("/stock_remove", async (req, res) => {
-  // replace stocks
+  // remove stock from db
   const { authorization } = req.headers;
+  const stockItems = req.body.stockToDelete;
+
+  // get username password from headers
   const [, token] = authorization.split(" ");
   const [username, password] = token.split(":");
-  const stockItems = req.body.stockToDelete;
-  // auth user, if not found, return
+  // auth user, if not found send back 403 err
   const user = await User.findOne({ username }).exec();
   if (!user || user.password !== password) {
     res.status(403);
@@ -204,10 +200,11 @@ app.post("/stock_remove", async (req, res) => {
   const stocks = await Stocks.findOne({ username: username }).exec();
 
   if (stockItems.amount === 0) {
-    // if new amt = old amt, remove stock from db
+    // if new amt = 0 amt, remove stock object from db
     await Stocks.updateOne({ username: username }, { $pull: { stocks: { ticker: stockItems.ticker } } }).exec();
-  
+    
   } else if (stockItems.amount > 0) {
+    // if new amt > 0 amt, update amt under stock object
     const stockIndex = stocks.stocks.map(item => item.ticker).indexOf(stockItems.ticker);
     stocks.stocks[stockIndex].amount = parseInt(stockItems.amount);
   }
@@ -236,15 +233,18 @@ app.post("/update", async (req, res) => {
 });
 
 app.get("/stocks", async (req, res) => {
-  // send todos to client
+  // send stocks to client
   const { authorization } = req.headers;
+
+  // get username password from headers
   const [, token] = authorization.split(" ");
   const [username, password] = token.split(":");
+  // auth user, if not found send back 403 err
   const user = await User.findOne({ username }).exec();
   if (!user || user.password !== password) {
     res.status(403);
     res.json({
-      message: "invalid access",
+      message: "Invalid access",
     });
     return;
   }
@@ -253,7 +253,10 @@ app.get("/stocks", async (req, res) => {
     const stocks = foundStocks.stocks;
     res.json(stocks);
   } else {
-    res.json([]);
+    res.status(404);
+    res.json({
+      message: "Stocks not found",
+    });
   }
 });
 

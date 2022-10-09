@@ -83,7 +83,7 @@ export default function Register() {
                       placeholder="Password"
                     />
                   </div>
-                  {error && (<span className='font-semibold text-xl text-red-600 hover:text-red-700 focus:text-red-700 transition duration-200 ease-in-out'>{error}</span>)}
+                  {error && (<span className='font-semibold text-xl text-red-600 hover:text-red-700 focus:text-red-700 mb-4 transition duration-200 ease-in-out'>{error}</span>)}
                   <div className="text-center lg:text-left">
                     <button
                       type="submit"
