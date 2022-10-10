@@ -209,31 +209,14 @@ app.post("/stock_remove", async (req, res) => {
   stocks.stocks = stockItems;
   stocks.save();
   res.json({
-    message: "Saved to database"
+    message: "Saved to database succesful"
     }
   )
-
-  // if (stockItems.amount === 0) {
-  //   // if new amt = 0 amt, remove stock object from db
-  //   await Stocks.updateOne({ username: username }, { $pull: { stocks: { ticker: stockItems.ticker } } }).exec();
-    
-  // } else if (stockItems.amount > 0) {
-  //   // if new amt > 0 amt, update amt under stock object
-  //   const stockIndex = stocks.stocks.map(item => item.ticker).indexOf(stockItems.ticker);
-  //   stocks.stocks[stockIndex].amount = parseInt(stockItems.amount);
-  // }
-  // await stocks.save()
-  // .then(async() => {
-  //   const newStocks = await Stocks.findOne({ username: username }).exec();
-  //   console.log(newStocks.stocks);
-  //   res.json(newStocks.stocks);
-  //   }
-  // )
-
 });
 
 app.post("/update", async (req, res) => {
-  // replace stocks
+  // loops through stocks and updates prev close price
+  // this should run every weekday for every user account
   const { authorization } = req.headers;
   const [, token] = authorization.split(" ");
   const [username, password] = token.split(":");
@@ -246,6 +229,26 @@ app.post("/update", async (req, res) => {
     });
     return;
   }
+
+  const stocks = await Stocks.findOne({ username: username }).exec();
+  // loop through stocks and update prev close
+  for (let i = 0; i < stocks.stocks.length; i++) {
+    const stockInfo = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${stocks.stocks[i].ticker}`)
+    const stockInfoJson = await stockInfo.json()
+
+    // get conversion rate from set currency -> dollar
+    // TODO: add a way for the user to select his own currency
+    const conversionRate = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${stockInfoJson.chart.result[0].meta.currency}USD=X`)
+    const conversionRateJson = await conversionRate.json();
+
+    // prev close value of stock in set currency
+    // TODO: add a way for the user to select his own currency
+    const prevClose = (stockInfoJson.chart.result[0].meta.previousClose * conversionRateJson.chart.result[0].meta.previousClose).toFixed(2);
+    stocks.stocks[i].prevClose = prevClose;
+  }
+  await stocks.save()
+
+  res.json(stocks.stocks);
 });
 
 app.get("/stocks", async (req, res) => {
