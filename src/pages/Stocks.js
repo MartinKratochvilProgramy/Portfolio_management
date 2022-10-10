@@ -1,8 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { CredentialsContext } from '../App';
-import StockInput from './StockInput';
-import StocksDisplay from './StocksDisplay';
-import { handleErrors } from '../pages/Login';
+import StockInput from '../components/StockInput';
+import StocksDisplay from '../components/StocksDisplay';
+import { handleErrors } from './Login';
 
 export default function Stocks() {
   const [stocks, setStocks] = useState([])

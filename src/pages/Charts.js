@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Plot from 'react-plotly.js';
 import { CredentialsContext } from '../App';
-import { handleErrors } from '../pages/Login';
+import { handleErrors } from './Login';
 
 export default function Charts() {
     const [stocksHistory, setStocksHistory] = useState([])

@@ -54,12 +54,14 @@ export default function StockInput({ setStocks }) {
   }
 
   const onTickerInputChange = (e) => {
+    setError(false);
     e.target.classList.remove('border-red-400');
     e.target.classList.add('border-gray-300');
     setStockTicker(e.target.value);
   }
-
+  
   const onAmountInputChange = (e) => {
+    setError(false);
     e.target.classList.remove('border-red-400');
     e.target.classList.add('border-gray-300');
     setStockAmount(e.target.value);
