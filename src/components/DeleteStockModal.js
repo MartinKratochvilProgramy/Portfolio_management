@@ -19,16 +19,13 @@ export default function DeleteStockModal({ setShowDeleteModal, deleteStock, stoc
 
     function submit(e) {
         e.preventDefault();
-        console.log(stock.amount - amountToRemove);
         if (stock.amount - amountToRemove < 0 || amountToRemove < 0) {
             // display red around input and return if invalid amount
-            console.log("too much");
             const modalAmountInput = document.getElementById('modal-amount-input');
             modalAmountInput.classList.remove('border-gray-300');
             modalAmountInput.classList.add('border-red-400');
             return;
         }
-        console.log(amountToRemove);
         deleteStock(stock.ticker, stock.amount - amountToRemove);
         setShowDeleteModal(false);
     }

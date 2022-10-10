@@ -198,6 +198,13 @@ app.post("/stock_remove", async (req, res) => {
   }
 
   const stocks = await Stocks.findOne({ username: username }).exec();
+  if (!stocks) {
+    res.status(403);
+    res.json({
+      message: "invalid access",
+    });
+    return;
+  }
 
   if (stockItems.amount === 0) {
     // if new amt = 0 amt, remove stock object from db
@@ -208,8 +215,13 @@ app.post("/stock_remove", async (req, res) => {
     const stockIndex = stocks.stocks.map(item => item.ticker).indexOf(stockItems.ticker);
     stocks.stocks[stockIndex].amount = parseInt(stockItems.amount);
   }
-  await stocks.save();
-  res.json(stocks.stocks);
+  await stocks.save()
+  .then(async() => {
+    const newStocks = await Stocks.findOne({ username: username }).exec();
+    console.log(newStocks.stocks);
+    res.json(newStocks.stocks);
+    }
+  )
 
 });
 
