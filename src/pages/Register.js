@@ -40,7 +40,7 @@ export default function Register() {
           username,
           password
         }))
-        navigate("/portfolio"); //deprec history.push()
+        navigate("/stocks"); //deprec history.push()
       })
       .catch((error) => {
         setError(error.message)

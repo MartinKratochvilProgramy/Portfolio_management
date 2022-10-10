@@ -1,12 +1,22 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { CredentialsContext } from '../App';
+import { useNavigate  } from 'react-router-dom';
 import StockInput from '../components/StockInput';
 import StocksDisplay from '../components/StocksDisplay';
+import Navbar from '../components/Navbar';
 import { handleErrors } from './Login';
 
 export default function Stocks() {
   const [stocks, setStocks] = useState([])
-  const [credentials, ] = useContext(CredentialsContext);
+  const [credentials, setCredentials] = useContext(CredentialsContext);
+
+  const navigate = useNavigate();
+
+  function logout() {
+    setCredentials(null);
+    localStorage.setItem('user', null)
+    navigate("/");
+  }
 
   useEffect(() => {
       // get stocks on load
@@ -46,6 +56,7 @@ export default function Stocks() {
 
   return (
     <div>
+      <Navbar active={"stocks"} logout={logout}/>
       <StockInput setStocks={setStocks}/>
       <StocksDisplay stocks={stocks} setStocks={setStocks}/>
 

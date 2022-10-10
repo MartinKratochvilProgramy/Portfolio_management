@@ -1,12 +1,22 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Plot from 'react-plotly.js';
+import Navbar from '../components/Navbar';
 import { CredentialsContext } from '../App';
+import { useNavigate  } from 'react-router-dom';
 import { handleErrors } from './Login';
 
 export default function Charts() {
     const [stocksHistory, setStocksHistory] = useState([])
     const [stocks, setStocks] = useState([])
-    const [credentials, ] = useContext(CredentialsContext);
+    const [credentials, setCredentials] = useContext(CredentialsContext);
+
+    const navigate = useNavigate();
+  
+    function logout() {
+      setCredentials(null);
+      localStorage.setItem('user', null)
+      navigate("/");
+    }
     
     useEffect(() => {
         // get net worth history on load
@@ -67,7 +77,7 @@ export default function Charts() {
                   }
             },
             margin: {
-                l: 20,
+                l: 80,
                 r: 20,
                 b: 60,
                 t: 20,
@@ -131,6 +141,7 @@ export default function Charts() {
     
   return (
     <div>
+      <Navbar active={"stocks"} logout={logout}/>
         <h1 className='text-3xl font-semibold mt-2 py-4 md:py-4 mb-0'>
             NET <span className='text-blue-600'>WORTH</span> HISTORY
         </h1>
