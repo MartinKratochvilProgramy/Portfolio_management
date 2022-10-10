@@ -5,7 +5,6 @@ import Stocks from '../components/Stocks';
 
 export default function Portfolio() {
   const [credentials, setCredentials] = useContext(CredentialsContext);
-
   
   const navigate = useNavigate();
 

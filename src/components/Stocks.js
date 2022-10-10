@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { CredentialsContext } from '../App';
 import StockInput from './StockInput';
 import StocksDisplay from './StocksDisplay';
+import { handleErrors } from '../pages/Login';
 
 export default function Stocks() {
     const [stocks, setStocks] = useState([])
@@ -16,8 +17,12 @@ export default function Stocks() {
               Authorization: `Basic ${credentials.username}:${credentials.password}`,
           },
           })
+          .then(handleErrors)
           .then((response ) => response.json())
-          .then((stocks) => setStocks(stocks));
+          .then((stocks) => setStocks(stocks))
+          .catch((error) => {
+            console.log(error);
+          })
     
       }, [credentials]);
 

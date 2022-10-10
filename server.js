@@ -227,9 +227,6 @@ app.post("/update", async (req, res) => {
     });
     return;
   }
-
-
-
 });
 
 app.get("/stocks", async (req, res) => {
