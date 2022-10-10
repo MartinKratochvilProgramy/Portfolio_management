@@ -31,11 +31,16 @@ const stocksSchema = new mongoose.Schema({
   ],
   purchaseHistory: [
     {
-      date: String,
       ticker: String,
-      amount: Number,
-      currentPrice: Number,
-      totalAmount: Number
+      purchases: [
+        {
+          date: String,
+          amount: Number,
+          currentPrice: Number,
+          totalAmount: Number
+  
+        }
+      ]
     }
   ],
   netWorthHistory: [
@@ -159,11 +164,15 @@ app.post("/stock_add", async (req, res) => {
         prevClose: value,
       }],
       purchaseHistory: [{
-        date: today,
         ticker: ticker,
-        amount: amount,
-        currentPrice: value,
-        totalAmount: (value * amount).toFixed(2),
+        purchases: [
+          {
+            date: today,
+            amount: amount,
+            currentPrice: value,
+            totalAmount: (value * amount).toFixed(2),
+          }
+        ]
       }],
       netWorthHistory: [{
         date: today,
@@ -183,17 +192,28 @@ app.post("/stock_add", async (req, res) => {
         amount: amount,
         prevClose: value,
       });
+      stocks.purchaseHistory.push({
+        ticker: ticker,
+        purchases: [
+          {
+            date: today,
+            amount: amount,
+            currentPrice: value,
+            totalAmount: (value * amount).toFixed(2),
+          }
+        ]
+      })
     } else {
       // stock ticker exists, add amount to existing object
       stocks.stocks[stockIndex].amount += parseInt(amount);
+      stocks.purchaseHistory[stockIndex].purchases.push({
+        ticker: ticker,
+        date: today,
+        amount: amount,
+        currentPrice: value,
+        totalAmount: (value * amount).toFixed(2),
+      });
     }
-    stocks.purchaseHistory.push({
-      date: today,
-      ticker: ticker,
-      amount: amount,
-      currentPrice: value,
-      totalAmount: (value * amount).toFixed(2),
-    });
     stocks.netWorthHistory.push({
       date: today,
       netWorth: stocks.netWorthHistory[stocks.netWorthHistory.length - 1].netWorth + parseFloat((value * amount).toFixed(2))
