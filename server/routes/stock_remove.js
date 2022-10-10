@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const User = require("../schemas/user")
 const Stocks = require("../schemas/stocks")
-const updateStock = require("../functions/update_stock")
+const updateStock = require("../functions/updateStocks")
 
 const stock_remove = app.post("/stock_remove", async (req, res) => {
     // remove stock from db

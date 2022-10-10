@@ -11,7 +11,7 @@ export default function Stock({ stock, deleteStock }) {
 
         <div className="w-full h-full text-justify flex items-start mx-3  ">
           <div className="w-16 font-bold">{stock.ticker}</div>
-          <div className="w-6">{stock.amount}</div>
+          <div className="ml-4 w-6">{stock.amount}</div>
           <div className="ml-6">{stock.prevClose} USD</div>
         </div>
         <button onClick={() => {setShowDeleteModal(true)}} id={stock.ticker} className="rounded-full p-1 transition duration-150 hover:bg-red-100 ease-in-out">

@@ -3,7 +3,7 @@ const app = express();
 const fetch = require('node-fetch');
 const User = require("../schemas/user")
 const Stocks = require("../schemas/stocks")
-const getCurrentDate = require("../functions/get_current_date");
+const getCurrentDate = require("../functions/getCurrentDate");
 
 const stock_add = app.post("/stock_add", async (req, res) => {
     // add stock to db

@@ -11,7 +11,7 @@ const stock_remove = require("./routes/stock_remove")
 const stocks = require("./routes/stocks")
 const stocks_history = require("./routes/stocks_history")
 
-const updateStock = require("./functions/update_stock")
+const updateStock = require("./functions/updateStocks")
 
 const app = express();
 const port = 4000;

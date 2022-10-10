@@ -1,6 +1,6 @@
 const Stocks = require("../schemas/stocks");
 const fetch = require('node-fetch');
-const getCurrentDate = require("./get_current_date");
+const getCurrentDate = require("./getCurrentDate");
 
 const updateStock = async (username) => {
     // loop through all user's stocks and update prev close
@@ -31,7 +31,7 @@ const updateStock = async (username) => {
     })
     await stocks.save()
   
-    console.log("updating stocks at time " + today + " for user " + username);
+    console.log("updating stocks at " + today + " for user " + username);
   }
 
   module.exports = updateStock;
