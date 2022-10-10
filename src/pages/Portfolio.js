@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import { CredentialsContext } from '../App';
 import { useNavigate  } from 'react-router-dom';
 import Stocks from '../components/Stocks';
+import Charts from '../components/Charts';
 
 export default function Portfolio() {
   const [credentials, setCredentials] = useContext(CredentialsContext);
@@ -28,6 +29,8 @@ export default function Portfolio() {
     <div className="">
 
       <Stocks />
+
+      <Charts />
       
        <button
         type="submit"

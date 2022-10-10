@@ -32,6 +32,7 @@ export default function StockInput({ setStocks }) {
   const addStock = (e) => {
     // get stock ticker, amount and send to server
     e.preventDefault();
+    setError(false);
     
     if (stockTicker === '') {
       const tickerInput = document.getElementById('ticker-input');

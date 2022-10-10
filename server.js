@@ -29,12 +29,21 @@ const stocksSchema = new mongoose.Schema({
       prevClose: Number,
     }
   ],
-  history: [
+  purchaseHistory: [
     {
       date: String,
-      value: Number
+      ticker: String,
+      amount: Number,
+      currentPrice: Number,
+      totalAmount: Number
     }
   ],
+  netWorthHistory: [
+    {
+      date: String,
+      netWorth: Number
+    }
+  ]
 })
 const Stocks = mongoose.model("Stocks", stocksSchema);
 
@@ -97,6 +106,8 @@ app.post("/stock_add", async (req, res) => {
   // add stock to db
   const { authorization } = req.headers;  // username, password
   const stockItems = req.body.newStock;   // new stock object
+  const ticker = stockItems.ticker.toUpperCase();
+  const amount = stockItems.amount;
 
   // get username password from headers
   const [, token] = authorization.split(" ");
@@ -119,7 +130,7 @@ app.post("/stock_add", async (req, res) => {
                   + currentdate.getHours() + ":"  
                   + currentdate.getMinutes()
   // get stocks ticker, if not exists, return
-  const stockInfo = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${stockItems.ticker}`)
+  const stockInfo = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}`)
   const stockInfoJson = await stockInfo.json()
   if (!stockInfoJson.chart.result) {
     res.status(403);
@@ -133,9 +144,9 @@ app.post("/stock_add", async (req, res) => {
   const conversionRate = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${stockInfoJson.chart.result[0].meta.currency}USD=X`)
   const conversionRateJson = await conversionRate.json();
   
-  // prev close value of stock in set currency
+  // current price of stock in set currency
   // TODO: add a way for the user to select his own currency
-  const value = (stockInfoJson.chart.result[0].meta.previousClose * conversionRateJson.chart.result[0].meta.previousClose).toFixed(2);
+  const value = (stockInfoJson.chart.result[0].meta.regularMarketPrice * conversionRateJson.chart.result[0].meta.regularMarketPrice).toFixed(2);
   
   const stocks = await Stocks.findOne({ username: username }).exec();
   if (!stocks) {
@@ -143,36 +154,49 @@ app.post("/stock_add", async (req, res) => {
     await Stocks.create({
       username: username,
       stocks: [{
-        ticker: stockItems.ticker, 
-        amount: stockItems.amount,
+        ticker: ticker, 
+        amount: amount,
         prevClose: value,
       }],
-      history: [{
-        value: value * stockItems.amount,
-        date: today
+      purchaseHistory: [{
+        date: today,
+        ticker: ticker,
+        amount: amount,
+        currentPrice: value,
+        totalAmount: (value * amount).toFixed(2),
+      }],
+      netWorthHistory: [{
+        date: today,
+        netWorth: (value * amount).toFixed(2)
       }]
     });
-    res.json([{ticker: stockItems.ticker, amount: stockItems.amount}]);
+    res.json([{ticker: ticker, amount: amount}]);
     return;
 
   } else {
     // if stock history, push to existing db
-    const stockIndex = stocks.stocks.map(item => item.ticker).indexOf(stockItems.ticker);
+    const stockIndex = stocks.stocks.map(item => item.ticker).indexOf(ticker);
     if (stockIndex === -1) {
       // stock ticker does not exist, push new
       stocks.stocks.push({
-        ticker: stockItems.ticker, 
-        amount: stockItems.amount,
+        ticker: ticker, 
+        amount: amount,
         prevClose: value,
       });
     } else {
       // stock ticker exists, add amount to existing object
-      stocks.stocks[stockIndex].amount += parseInt(stockItems.amount);
+      stocks.stocks[stockIndex].amount += parseInt(amount);
     }
-
-    stocks.history.push({
-      value: stocks.history.slice(-1)[0].value + value * stockItems.amount,
-      date: today
+    stocks.purchaseHistory.push({
+      date: today,
+      ticker: ticker,
+      amount: amount,
+      currentPrice: value,
+      totalAmount: (value * amount).toFixed(2),
+    });
+    stocks.netWorthHistory.push({
+      date: today,
+      netWorth: stocks.netWorthHistory[stocks.netWorthHistory.length - 1].netWorth + parseFloat((value * amount).toFixed(2))
     })
     await stocks.save();
   }
@@ -207,7 +231,11 @@ app.post("/stock_remove", async (req, res) => {
   }
 
   stocks.stocks = stockItems;
-  stocks.save();
+  await stocks.save();
+
+  const updatedStocks = await updateStocks(username);
+  await updatedStocks.save();
+  
   res.json({
     message: "Saved to database succesful"
     }
@@ -230,23 +258,8 @@ app.post("/update", async (req, res) => {
     return;
   }
 
-  const stocks = await Stocks.findOne({ username: username }).exec();
-  // loop through stocks and update prev close
-  for (let i = 0; i < stocks.stocks.length; i++) {
-    const stockInfo = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${stocks.stocks[i].ticker}`)
-    const stockInfoJson = await stockInfo.json()
-
-    // get conversion rate from set currency -> dollar
-    // TODO: add a way for the user to select his own currency
-    const conversionRate = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${stockInfoJson.chart.result[0].meta.currency}USD=X`)
-    const conversionRateJson = await conversionRate.json();
-
-    // prev close value of stock in set currency
-    // TODO: add a way for the user to select his own currency
-    const prevClose = (stockInfoJson.chart.result[0].meta.previousClose * conversionRateJson.chart.result[0].meta.previousClose).toFixed(2);
-    stocks.stocks[i].prevClose = prevClose;
-  }
-  await stocks.save()
+  const stocks = await updateStocks(username)
+  console.log(stocks);
 
   res.json(stocks.stocks);
 });
@@ -279,6 +292,34 @@ app.get("/stocks", async (req, res) => {
   }
 });
 
+app.get("/stocks_history", async (req, res) => {
+  // send stocks to client
+  const { authorization } = req.headers;
+
+  // get username password from headers
+  const [, token] = authorization.split(" ");
+  const [username, password] = token.split(":");
+  // auth user, if not found send back 403 err
+  const user = await User.findOne({ username }).exec();
+  if (!user || user.password !== password) {
+    res.status(403);
+    res.json({
+      message: "Invalid access",
+    });
+    return;
+  }
+  const foundStocks = await Stocks.findOne({ username: username }).exec();
+  if (foundStocks) {
+    const stocks = foundStocks.netWorthHistory;
+    res.json(stocks);
+  } else {
+    res.status(404);
+    res.json({
+      message: "Stocks not found",
+    });
+  }
+});
+
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -288,3 +329,40 @@ db.once("open", function () {
   });
 });
 
+
+async function updateStocks (username) {
+  const stocks = await Stocks.findOne({ username: username }).exec();
+  // loop through stocks and update prev close
+  let totalNetWorth = 0;
+  for (let i = 0; i < stocks.stocks.length; i++) {
+    const stockInfo = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${stocks.stocks[i].ticker}`)
+    const stockInfoJson = await stockInfo.json()
+
+    // get conversion rate from set currency -> dollar
+    // TODO: add a way for the user to select his own currency
+    const conversionRate = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${stockInfoJson.chart.result[0].meta.currency}USD=X`)
+    const conversionRateJson = await conversionRate.json();
+
+    // prev close value of stock in set currency
+    // TODO: add a way for the user to select his own currency
+    const prevClose = (stockInfoJson.chart.result[0].meta.previousClose * conversionRateJson.chart.result[0].meta.previousClose).toFixed(2);
+    stocks.stocks[i].prevClose = prevClose;
+    
+    totalNetWorth += prevClose * conversionRateJson.chart.result[0].meta.previousClose * stocks.stocks[i].amount;
+  }
+  
+  // get current date
+  const currentdate = new Date(); 
+  const today =     currentdate.getFullYear() + "-"
+                  + (currentdate.getMonth()+1)  + "-" 
+                  + currentdate.getDate() + " "  
+                  + currentdate.getHours() + ":"  
+                  + currentdate.getMinutes()
+  stocks.netWorthHistory.push({
+    date: today,
+    netWorth: parseFloat((totalNetWorth).toFixed(2))
+  })
+  await stocks.save()
+
+  return stocks;
+}

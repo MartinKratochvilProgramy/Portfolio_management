@@ -38,7 +38,6 @@ export default function Stocks() {
     .then((response ) => response.json())
     .then((stocks) => {
       setStocks(stocks);
-      console.log(stocks);
     })
     .catch((error) => {
       console.log(error);
