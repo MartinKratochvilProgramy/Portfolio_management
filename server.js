@@ -182,7 +182,7 @@ app.post("/stock_add", async (req, res) => {
 app.post("/stock_remove", async (req, res) => {
   // remove stock from db
   const { authorization } = req.headers;
-  const stockItems = req.body.stockToDelete;
+  const stockItems = req.body.newStocks;
 
   // get username password from headers
   const [, token] = authorization.split(" ");
@@ -195,7 +195,7 @@ app.post("/stock_remove", async (req, res) => {
       message: "invalid access",
     });
     return;
-  }
+  } 
 
   const stocks = await Stocks.findOne({ username: username }).exec();
   if (!stocks) {
@@ -206,22 +206,29 @@ app.post("/stock_remove", async (req, res) => {
     return;
   }
 
-  if (stockItems.amount === 0) {
-    // if new amt = 0 amt, remove stock object from db
-    await Stocks.updateOne({ username: username }, { $pull: { stocks: { ticker: stockItems.ticker } } }).exec();
-    
-  } else if (stockItems.amount > 0) {
-    // if new amt > 0 amt, update amt under stock object
-    const stockIndex = stocks.stocks.map(item => item.ticker).indexOf(stockItems.ticker);
-    stocks.stocks[stockIndex].amount = parseInt(stockItems.amount);
-  }
-  await stocks.save()
-  .then(async() => {
-    const newStocks = await Stocks.findOne({ username: username }).exec();
-    console.log(newStocks.stocks);
-    res.json(newStocks.stocks);
+  stocks.stocks = stockItems;
+  stocks.save();
+  res.json({
+    message: "Saved to database"
     }
   )
+
+  // if (stockItems.amount === 0) {
+  //   // if new amt = 0 amt, remove stock object from db
+  //   await Stocks.updateOne({ username: username }, { $pull: { stocks: { ticker: stockItems.ticker } } }).exec();
+    
+  // } else if (stockItems.amount > 0) {
+  //   // if new amt > 0 amt, update amt under stock object
+  //   const stockIndex = stocks.stocks.map(item => item.ticker).indexOf(stockItems.ticker);
+  //   stocks.stocks[stockIndex].amount = parseInt(stockItems.amount);
+  // }
+  // await stocks.save()
+  // .then(async() => {
+  //   const newStocks = await Stocks.findOne({ username: username }).exec();
+  //   console.log(newStocks.stocks);
+  //   res.json(newStocks.stocks);
+  //   }
+  // )
 
 });
 

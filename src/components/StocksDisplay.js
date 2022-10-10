@@ -1,17 +1,13 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import Stock from './Stock';
 import { CredentialsContext } from '../App';
 
 export default function Stocks({ stocks, setStocks }) {
 
   const [credentials, ] = useContext(CredentialsContext);
-  
 
-  const persist = (stockToDelete) => {
+  const persist = (newStocks) => {
     // hit the endpoint and write to db
-
-
-
     fetch(`http://localhost:4000/stock_remove`, {
       method: 'POST',
       headers: {
@@ -19,27 +15,25 @@ export default function Stocks({ stocks, setStocks }) {
         "Authorization": `Basic ${credentials.username}:${credentials.password}`
       },
       body: JSON.stringify({
-        stockToDelete, 
+        newStocks, 
       })
     })
     .then((response ) => response.json())
-    .then((returnedStocks) => {
-      if (stockToDelete.amount === 0) {
-        console.log("returned: ", returnedStocks);
-        console.log(stockToDelete);
-        const newStocks = returnedStocks.filter((stock) => stock.ticker =! stockToDelete.ticker)
-        console.log("new: ", newStocks);
-        //setStocks(newStocks);
-      } else {
-        console.log("returned: ", returnedStocks);
-        setStocks(returnedStocks);
-      }
-    })
   };
 
   function deleteStock(ticker, newAmount) {
-    const stockToDelete = {ticker: ticker, amount: newAmount};
-    persist(stockToDelete);
+    if (newAmount === 0) {
+      const newStocks = stocks.filter((stock) => stock.ticker !== ticker)
+      console.log("newSotcks:", newStocks);
+      setStocks(newStocks);
+      persist(newStocks);
+    } else if (newAmount > 0) {
+      const newStocks = stocks;
+      const objIndex = stocks.findIndex((stocks => stocks.ticker === ticker));
+      newStocks[objIndex].amount = newAmount;
+      setStocks(newStocks);
+      persist(newStocks);
+    }
   }
 
   return (
