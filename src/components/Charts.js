@@ -48,10 +48,6 @@ export default function Charts() {
 
     function initHistoryChart() {
         const historyLayout =  {
-            title: 'Total net worth',
-            "titlefont": {
-                "size": 32,
-              },
             xaxis: {
                 title: {
                     text: 'Time',
@@ -70,6 +66,13 @@ export default function Charts() {
                     }
                   }
             },
+            margin: {
+                l: 20,
+                r: 20,
+                b: 60,
+                t: 20,
+                pad: 5
+              }, title: false
         } ;
         const netWorthHistory = [];
         const changeshHistory = [];
@@ -92,11 +95,13 @@ export default function Charts() {
 
     function initPieChart() {
         const pieLayout =  {
-            title: 'All stocks',
-            "titlefont": {
-                "size": 32,
-              },
-
+            margin: {
+                l: 20,
+                r: 20,
+                b: 20,
+                t: 20,
+                pad: 5
+              }, title: false
         } ;
         const stockTickers = [];
         const stockFractions = [];
@@ -126,10 +131,16 @@ export default function Charts() {
     
   return (
     <div>
+        <h1 className='text-3xl font-semibold mt-2 py-4 md:py-4 mb-0'>
+            NET <span className='text-blue-600'>WORTH</span> HISTORY
+        </h1>
         <Plot
             data={historyData}
             layout={historyLayout}
         />
+        <h1 className='text-3xl font-semibold mt-2 py-4 md:py-4 mb-0'>
+            ALL <span className='text-blue-600'>STOCKS</span>
+        </h1>
         <Plot
             data={pieData}
             layout={pieLayout}
