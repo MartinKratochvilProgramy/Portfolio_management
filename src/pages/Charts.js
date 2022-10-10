@@ -141,7 +141,7 @@ export default function Charts() {
     
   return (
     <div>
-      <Navbar active={"stocks"} logout={logout}/>
+      <Navbar active={"charts"} logout={logout}/>
         <h1 className='text-3xl font-semibold mt-2 py-4 md:py-4 mb-0'>
             NET <span className='text-blue-600'>WORTH</span> HISTORY
         </h1>

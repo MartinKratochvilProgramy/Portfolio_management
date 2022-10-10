@@ -233,7 +233,7 @@ app.post("/stock_remove", async (req, res) => {
   stocks.stocks = stockItems;
   await stocks.save();
 
-  const updatedStocks = await updateStocks(username);
+  const updatedStocks = await updateStock(username);
   await updatedStocks.save();
   
   res.json({
@@ -258,9 +258,7 @@ app.post("/update", async (req, res) => {
     return;
   }
 
-  const stocks = await updateStocks(username)
-  console.log(stocks);
-
+  const stocks = await updateStock(username)
   res.json(stocks.stocks);
 });
 
@@ -330,7 +328,8 @@ db.once("open", function () {
 });
 
 
-async function updateStocks (username) {
+async function updateStock (username) {
+
   const stocks = await Stocks.findOne({ username: username }).exec();
   // loop through stocks and update prev close
   let totalNetWorth = 0;
@@ -357,12 +356,24 @@ async function updateStocks (username) {
                   + (currentdate.getMonth()+1)  + "-" 
                   + currentdate.getDate() + " "  
                   + currentdate.getHours() + ":"  
-                  + currentdate.getMinutes()
+                  + (currentdate.getMinutes() < 10 ? "0"+currentdate.getMinutes() : currentdate.getMinutes())
   stocks.netWorthHistory.push({
     date: today,
     netWorth: parseFloat((totalNetWorth).toFixed(2))
   })
   await stocks.save()
 
+  console.log("updating stocks at time " + today + " for user " + username);
+
   return stocks;
 }
+
+async function updateStocks () {
+  const allStocks = await Stocks.find();
+  for (let i = 0; i < allStocks.length; i++) {
+    updateStock(allStocks[i].username);
+  }
+  console.log("-------------------");
+}
+
+setInterval(function () {updateStocks()}, 1 * 60 * 1000);

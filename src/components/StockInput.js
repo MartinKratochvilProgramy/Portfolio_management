@@ -90,7 +90,7 @@ export default function StockInput({ setStocks }) {
               <input 
                 type="number" 
                 id="amount-input" 
-                className="bg-gray-100 border w-6/12 border-gray-300 text-gray-900 text-sm focus:outline-none block pl-4 p-2.5" 
+                className="bg-gray-100 border w-8/12 border-gray-300 text-gray-900 text-sm focus:outline-none block pl-4 p-2.5" 
                 placeholder="Amount..." 
                 required="" 
                 onChange={onAmountInputChange} 
