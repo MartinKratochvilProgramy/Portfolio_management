@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require('cors');
 const fetch = require('node-fetch');
 const mongoose = require('mongoose');
+const User = require("./schemas/user")
+const Stocks = require("./schemas/stocks")
 const bcrypt = require("bcrypt");
 const app = express();
 const port = 4000;
@@ -14,43 +16,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/portfolio", {
   useNewUrlParser: true,
 });
 
-const userSchema = new mongoose.Schema({
-  username: String,
-  password: String
-})
-const User = mongoose.model("User", userSchema);
 
-const stocksSchema = new mongoose.Schema({
-  username: String,
-  stocks: [
-    {
-      ticker: String,
-      amount: Number,
-      prevClose: Number,
-    }
-  ],
-  purchaseHistory: [
-    {
-      ticker: String,
-      purchases: [
-        {
-          date: String,
-          amount: Number,
-          currentPrice: Number,
-          totalAmount: Number
-  
-        }
-      ]
-    }
-  ],
-  netWorthHistory: [
-    {
-      date: String,
-      netWorth: Number
-    }
-  ]
-})
-const Stocks = mongoose.model("Stocks", stocksSchema);
 
 app.post("/register", async (req, res) => {
   // create user account, return 500 err if no password or username given
