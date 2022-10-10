@@ -49,6 +49,9 @@ export default function Charts() {
     function initHistoryChart() {
         const historyLayout =  {
             title: 'Total net worth',
+            "titlefont": {
+                "size": 32,
+              },
             xaxis: {
                 title: {
                     text: 'Time',
@@ -88,8 +91,11 @@ export default function Charts() {
     }
 
     function initPieChart() {
-        const pieChartLayout =  {
+        const pieLayout =  {
             title: 'All stocks',
+            "titlefont": {
+                "size": 32,
+              },
 
         } ;
         const stockTickers = [];
@@ -112,12 +118,12 @@ export default function Charts() {
                 marker: {color: '#1C64F2'},
             },
         ]
-        return {pieData, pieChartLayout}
+        return {pieData, pieLayout}
     }
 
-const {historyData, historyLayout} = initHistoryChart();        
-const {pieData, pieChartLayout} = initPieChart();        
-
+    const {historyData, historyLayout} = initHistoryChart();        
+    const {pieData, pieLayout} = initPieChart();   
+    
   return (
     <div>
         <Plot
@@ -126,7 +132,7 @@ const {pieData, pieChartLayout} = initPieChart();
         />
         <Plot
             data={pieData}
-            layout={pieChartLayout}
+            layout={pieLayout}
         />
     </div>
   )
