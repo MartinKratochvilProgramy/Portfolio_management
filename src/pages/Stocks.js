@@ -36,24 +36,6 @@ export default function Stocks() {
   
     }, [credentials]);
 
-  function update () {
-    fetch(`http://localhost:4000/update`, {
-      method: 'POST',
-      headers: {
-          "Content-Type": "application/json",
-          Authorization: `Basic ${credentials.username}:${credentials.password}`,
-      },
-    })
-    .then(handleErrors)
-    .then((response ) => response.json())
-    .then((stocks) => {
-      setStocks(stocks);
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-  }
-
   return (
     <div>
       <Navbar active={"stocks"} logout={logout}/>

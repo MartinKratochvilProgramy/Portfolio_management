@@ -33,7 +33,7 @@ export default function Charts() {
                 setStocksHistory(stocks)
             })
             .catch((error) => {
-            console.log(error);
+            console.log( error);
             })
 
         }, [credentials]);
@@ -85,15 +85,15 @@ export default function Charts() {
               }, title: false
         } ;
         const netWorthHistory = [];
-        const changeshHistory = [];
+        const changesHistory = [];
         stocksHistory.forEach(stock => {
             netWorthHistory.push(stock.netWorth)
-            changeshHistory.push(stock.date)
+            changesHistory.push(stock.date)
         });
     
         const historyData = [
             {
-                x: changeshHistory,
+                x: changesHistory,
                 y: netWorthHistory,
                 type: 'scatter',
                 mode: 'lines+markers',
