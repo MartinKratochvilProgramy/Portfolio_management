@@ -1,7 +1,19 @@
-import React from 'react'
+import React, { useContext } from 'react';
+import { CredentialsContext } from '../App';
+import { useNavigate  } from 'react-router-dom';
 
-export default function Navbar({ active, logout }) {
+export default function Navbar({ active }) {
+
+    const [, setCredentials] = useContext(CredentialsContext);
     
+    const navigate = useNavigate();
+
+    function logout() {
+        setCredentials(null);
+        localStorage.setItem('user', null)
+        navigate("/");
+    }
+
     const activeStyles = "block p-2 sm:p-4 text-white bg-blue-700 rounded bg-transparent text-blue-700 dark:text-white";
     const nonActiveStyles = "block p-2 sm:p-4 text-gray-700 rounded hover:bg-gray-100 hover:bg-transparent hover:text-blue-700 dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:hover:bg-transparent dark:border-gray-700";
 

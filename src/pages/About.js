@@ -1,24 +1,12 @@
-import React, { useContext } from 'react';
-import { CredentialsContext } from '../App';
-import { useNavigate  } from 'react-router-dom';
+import React from 'react';
+
 import Navbar from '../components/Navbar';
 
 export default function About() {
   
-    const [credentials, setCredentials] = useContext(CredentialsContext);
-
-    const navigate = useNavigate();
-
-    function logout() {
-        setCredentials(null);
-        localStorage.setItem('user', null)
-        navigate("/");
-    }
-    
-
     return (
     <div>
-        <Navbar active={"about"} logout={logout}/>
+        <Navbar active={"about"}/>
         <div className='flex flex-col justify-center items-center space-y-16'>
             <h1 className='text-3xl font-semibold mt-8'>
                 <span className='text-blue-600'>ADD</span> STOCKS AND <span className='text-blue-600'>MANAGE</span> YOUR STOCK PORTFOLIO
@@ -37,7 +25,7 @@ export default function About() {
                 section, where the amount of money you invested is displayed. 
             </p>
             <p className='max-w-[60%] text-xl'>
-                This app is intended for the 'Bogglehead' type investor who likes to invest regularly over longer period of time.
+                This app is intended for the 'Bogglehead' type investor who likes to invest regularly over longer periods of time.
             </p>
         </div>
     </div>

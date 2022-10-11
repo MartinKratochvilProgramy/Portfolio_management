@@ -1,23 +1,14 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { CredentialsContext } from '../App';
 import Plot from 'react-plotly.js';
-import { useNavigate  } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { handleErrors } from './Login';
 
 export default function Investments() {
 
-    const [credentials, setCredentials] = useContext(CredentialsContext);
+    const [credentials, ] = useContext(CredentialsContext);
     const [investmentsHistory, setInvestmentsHistory] = useState([]);
   
-    const navigate = useNavigate();
-  
-    function logout() {
-      setCredentials(null);
-      localStorage.setItem('user', null)
-      navigate("/");
-    }
-
     useEffect(() => {
       // get net worth history on load
       fetch(`http://localhost:4000/investments_history`, {
@@ -89,7 +80,7 @@ export default function Investments() {
 
   return (
     <div>
-        <Navbar active={"investments"} logout={logout}/>
+        <Navbar active={"investments"}/>
         <h1 className='text-3xl font-semibold mt-2 py-4 md:py-4 mb-0'>
             YOUR HISTORICAL <span className='text-blue-600'>INVESTMENTS</span>
         </h1>
