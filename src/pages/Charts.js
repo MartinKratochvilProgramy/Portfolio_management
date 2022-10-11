@@ -6,8 +6,9 @@ import { useNavigate  } from 'react-router-dom';
 import { handleErrors } from './Login';
 
 export default function Charts() {
-    const [stocksHistory, setStocksHistory] = useState([])
-    const [stocks, setStocks] = useState([])
+    const [stocksHistory, setStocksHistory] = useState([]);
+    const [stocks, setStocks] = useState([]);
+    const [currentNetWorth, setCurrentNetWorth] = useState(null);
     const [credentials, setCredentials] = useContext(CredentialsContext);
 
     const navigate = useNavigate();
@@ -31,14 +32,12 @@ export default function Charts() {
             .then((response ) => response.json())
             .then((stocks) => {
                 setStocksHistory(stocks)
+                setCurrentNetWorth(stocks[stocks.length - 1].netWorth)
             })
             .catch((error) => {
             console.log( error);
-            })
-
-        }, [credentials]);
-
-    useEffect(() => {
+        })
+    
         // get stocks on load
         fetch(`http://localhost:4000/stocks`, {
             method: 'GET',
@@ -52,9 +51,9 @@ export default function Charts() {
             .then((stocks) => setStocks(stocks))
             .catch((error) => {
             console.log(error);
-            })
-    
-        }, [credentials]);
+        })
+
+    }, [credentials]);
 
     function initHistoryChart() {
         const historyLayout =  {
@@ -145,6 +144,9 @@ export default function Charts() {
         <h1 className='text-3xl font-semibold mt-2 py-4 md:py-4 mb-0'>
             NET <span className='text-blue-600'>WORTH</span> HISTORY
         </h1>
+        <div className='font-semibold'>
+            Total: <span className='text-blue-600'>{currentNetWorth}</span> $
+        </div>
         <Plot
             data={historyData}
             layout={historyLayout}
