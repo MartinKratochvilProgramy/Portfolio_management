@@ -5,11 +5,7 @@ import {
   Route,
 } from "react-router-dom";
 import React, { useState } from "react";
-import Register from './pages/Register';
-import Login from './pages/Login';
-import Stocks from './pages/Stocks';
-import Charts from './pages/Charts';
-import Investments from './pages/Investments';
+import { Register, Login, Stocks, Charts, Investments, About } from './pages';
 
 export const CredentialsContext = React.createContext();
 
@@ -27,6 +23,7 @@ function App() {
             <Route exact path='/stocks' element={<Stocks />}></Route>
             <Route exact path='/charts' element={<Charts />}></Route>
             <Route exact path='/investments' element={<Investments />}></Route>
+            <Route exact path='/about' element={<About />}></Route>
           </Routes> 
         </Router>
       </CredentialsContext.Provider>

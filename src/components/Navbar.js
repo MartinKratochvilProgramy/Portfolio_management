@@ -27,7 +27,7 @@ export default function Navbar({ active, logout }) {
                         </a>
                     </li>
                     <li>
-                        <a href="investments" className={active === "investments" ? activeStyles : nonActiveStyles}>
+                        <a href="about" className={active === "about" ? activeStyles : nonActiveStyles}>
                             About
                         </a>
                     </li>
