@@ -56,4 +56,4 @@ async function updateStocks () {
   console.log("-------------------");
 }
 
-setInterval(function () {updateStocks()}, 1 * 3600 * 1000);
+setInterval(function () {updateStocks()}, 1 * 1000 * 1000);

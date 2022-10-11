@@ -76,7 +76,7 @@ export default function StockInput({ setStocks }) {
           <h1 className='text-3xl font-semibold mt-2 py-4 md:py-4 mb-0'>
             ADD NEW <span className='text-blue-600'>STOCK</span>
           </h1>
-          <div className="relative flex flex-row w-1/2 h-full">
+          <div className="relative flex flex-row w-8/12 md:w-1/2 h-full">
               <input 
                 type="text" 
                 id="ticker-input" 

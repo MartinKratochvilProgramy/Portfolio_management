@@ -36,8 +36,10 @@ export default function Stocks({ stocks, setStocks }) {
   }
 
   return (
-    <div className="md:px-12 px-2 pt-14 md:pt-1 lg:w-6/12 md:w-8/12 w-10/12 m-auto">
-      <div id='stocks-output'>
+    <div 
+      className="flex flex-col md:px-12 px-2 pt-14 md:pt-1 lg:w-6/12 md:w-8/12 w-10/12 m-auto"
+      id='stocks-output'
+      >
         {stocks.map((stock) => {
           return (
               <Stock 
@@ -47,7 +49,6 @@ export default function Stocks({ stocks, setStocks }) {
                 />
           )
         })}
-      </div>
   </div>
   )
 }
