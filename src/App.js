@@ -9,6 +9,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Stocks from './pages/Stocks';
 import Charts from './pages/Charts';
+import Investments from './pages/Investments';
 
 export const CredentialsContext = React.createContext();
 
@@ -25,6 +26,7 @@ function App() {
             <Route exact path='/register' element={<Register />}></Route>
             <Route exact path='/stocks' element={<Stocks />}></Route>
             <Route exact path='/charts' element={<Charts />}></Route>
+            <Route exact path='/investments' element={<Investments />}></Route>
           </Routes> 
         </Router>
       </CredentialsContext.Provider>

@@ -11,6 +11,7 @@ const stock_remove = require("./routes/stock_remove")
 const stocks = require("./routes/stocks")
 const stocks_history = require("./routes/stocks_history")
 const stock_purchases = require("./routes/stock_purchases")
+const investments_history = require("./routes/investments_history")
 
 const updateStock = require("./functions/updateStocks")
 
@@ -33,6 +34,7 @@ app.use("/", stock_remove);
 app.use("/", stocks);
 app.use("/", stocks_history);
 app.use("/", stock_purchases);
+app.use("/", investments_history);
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));

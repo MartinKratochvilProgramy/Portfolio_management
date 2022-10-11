@@ -69,6 +69,10 @@ const stock_add = app.post("/stock_add", async (req, res) => {
         netWorthHistory: [{
           date: today,
           netWorth: (value * amount).toFixed(2)
+        }],
+        totalInvestedHistory: [{
+          date: today,
+          total: (value * amount).toFixed(2)
         }]
       });
       res.json([{ticker: ticker, amount: amount}]);
@@ -106,10 +110,24 @@ const stock_add = app.post("/stock_add", async (req, res) => {
           totalAmount: (value * amount).toFixed(2),
         });
       }
+      // increase total net worth by invested amount
       stocks.netWorthHistory.push({
         date: today,
         netWorth: stocks.netWorthHistory[stocks.netWorthHistory.length - 1].netWorth + parseFloat((value * amount).toFixed(2))
       })
+
+      // add purchase to investments history
+      const investedIndex = stocks.totalInvestedHistory.map(item => item.date).indexOf(today);
+      if (investedIndex === -1) {
+        // if no purchase was made today
+        stocks.totalInvestedHistory.push({
+            date: today,
+            total: (stocks.totalInvestedHistory[stocks.totalInvestedHistory.length - 1].total + parseFloat((value * amount))).toFixed(2)
+          })
+      } else {
+        // if purchase was made today, increment in existing date
+        stocks.totalInvestedHistory[investedIndex].total += parseFloat((value * amount).toFixed(2));
+      }
       await stocks.save();
     }
     res.json(stocks.stocks);

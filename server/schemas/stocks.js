@@ -18,7 +18,6 @@ const stocksSchema = new mongoose.Schema({
             amount: Number,
             currentPrice: Number,
             totalAmount: Number
-    
           }
         ]
       }
@@ -27,6 +26,12 @@ const stocksSchema = new mongoose.Schema({
       {
         date: String,
         netWorth: Number
+      }
+    ],
+    totalInvestedHistory: [
+      {
+        date: String,
+        total: Number
       }
     ]
   })
