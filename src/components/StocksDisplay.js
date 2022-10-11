@@ -24,7 +24,6 @@ export default function Stocks({ stocks, setStocks }) {
   function deleteStock(ticker, newAmount) {
     if (newAmount === 0) {
       const newStocks = stocks.filter((stock) => stock.ticker !== ticker)
-      console.log("newSotcks:", newStocks);
       setStocks(newStocks);
       persist(newStocks);
     } else if (newAmount > 0) {

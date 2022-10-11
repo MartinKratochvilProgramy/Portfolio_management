@@ -23,7 +23,7 @@ export default function StockInput({ setStocks }) {
     })
     .then(handleErrors)
     .then((response ) => response.json())
-    .then((returnedStocks) => setStocks(returnedStocks))
+    .then((returnedStocks) => {setStocks(returnedStocks)})
     .catch((error) => {
       setError(error.message)
     })

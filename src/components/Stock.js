@@ -34,6 +34,7 @@ export default function Stock({ stock, deleteStock }) {
     setExpanded(!expanded);
   }
 
+
   return (
     <div 
       className={"border-blue-600 border-solid border-[1px] rounded px-4 py-3 my-4 cursor-pointer text-black font-medium text-sm leading-snug uppercase hover:shadow-xl focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-100 active:shadow-lg transition duration-150 ease-in-out"}
