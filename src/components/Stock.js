@@ -13,7 +13,6 @@ export default function Stock({ stock, deleteStock }) {
   function expand() {
     // on click fetch purchase data from server 
     if (!expanded && fetchData) {
-      console.log("fetching data!");
       const ticker = stock.ticker;
       
       fetch(`http://localhost:4000/stock_purchases`, {
@@ -37,7 +36,7 @@ export default function Stock({ stock, deleteStock }) {
 
   return (
     <div 
-      className={"border-blue-600 border-solid border-[1px] rounded px-4 py-3 my-4 cursor-pointer text-black font-medium text-sm leading-snug uppercase hover:shadow-xl focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"}
+      className={"border-blue-600 border-solid border-[1px] rounded px-4 py-3 my-4 cursor-pointer text-black font-medium text-sm leading-snug uppercase hover:shadow-xl focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-100 active:shadow-lg transition duration-150 ease-in-out"}
       onClick={expand}
     >
       <div className="flex flex-row items-center">
