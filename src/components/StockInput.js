@@ -76,26 +76,28 @@ export default function StockInput({ setStocks }) {
           <h1 className='text-3xl font-semibold mt-2 py-4 md:py-4 mb-0'>
             ADD NEW <span className='text-blue-600'>STOCK</span>
           </h1>
-          <div className="relative flex flex-row w-8/12 md:w-1/2 h-full">
-              <input 
-                type="text" 
-                id="ticker-input" 
-                className="bg-gray-100 border w-full border-gray-300 text-gray-900 text-sm focus:outline-none block pl-4 p-2.5" 
-                placeholder="Ticker..." 
-                required="" 
-                autoFocus
-                onChange={onTickerInputChange} 
-                value={stockTicker}
-                />
-              <input 
-                type="number" 
-                id="amount-input" 
-                className="bg-gray-100 border w-5/12 md:w-6/12 lg:w-4/12 border-gray-300 text-gray-900 text-sm focus:outline-none block pl-4 p-2.5" 
-                placeholder="Amount..." 
-                required="" 
-                onChange={onAmountInputChange} 
-                value={stockAmount}
+          <div className="relative flex flex-row w-8/12 md:w-8/12 h-full">
+            <label htmlFor ="add-stock" className="sr-only">Ticker input</label>
+            <input 
+              type="text" 
+              id="ticker-input" 
+              className="bg-gray-100 border w-full border-gray-300 text-gray-900 text-sm focus:outline-none block pl-4 p-2.5" 
+              placeholder="Ticker ('AAPL', 'MSFT', ... )" 
+              required="" 
+              autoFocus
+              onChange={onTickerInputChange} 
+              value={stockTicker}
               />
+            <label htmlFor ="add-stock" className="sr-only">Amount input</label>
+            <input 
+              type="number" 
+              id="amount-input" 
+              className="bg-gray-100 border w-5/12 md:w-6/12 lg:w-4/12 border-gray-300 text-gray-900 text-sm focus:outline-none block pl-4 p-2.5" 
+              placeholder="Amount..." 
+              required="" 
+              onChange={onAmountInputChange} 
+              value={stockAmount}
+            />
           </div>
           <button
               type="submit"

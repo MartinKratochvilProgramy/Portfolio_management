@@ -31,7 +31,6 @@ export default function Investments() {
           .then((response ) => response.json())
           .then((investments) => {
             setInvestmentsHistory(investments)
-            console.log(investments);
           })
           .catch((error) => {
           console.log( error);

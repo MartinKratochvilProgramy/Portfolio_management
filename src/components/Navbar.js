@@ -10,7 +10,7 @@ export default function Navbar({ active, logout }) {
         <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
             <div className="flex justify-end items-center w-auto order-1" id="navbar-search">
 
-                <ul className="flex flex-row justify-end  items-center p-1 rounded-lg border-gray-100 space-x-2 md:space-x-4 mt-0 text-sm font-medium border-0 bg-white dark:bg-gray-900 dark:border-gray-700">
+                <ul className="flex flex-row justify-end  items-center p-1 rounded-lg border-gray-100 space-x-0 md:space-x-4 mt-0 text-sm font-medium border-0 bg-white dark:bg-gray-900 dark:border-gray-700">
                     <li>
                         <a href="/stocks" className={active === "stocks" ? activeStyles : nonActiveStyles}>
                             Stocks
