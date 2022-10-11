@@ -4,7 +4,7 @@ const User = require("../schemas/user")
 const Stocks = require("../schemas/stocks")
 
 const investments_history = app.get("/investments_history", async (req, res) => {
-    // send stocks to client
+    // send invested amounts to client
     const { authorization } = req.headers;
   
     // get username password from headers
