@@ -113,8 +113,10 @@ const stock_add = app.post("/stock_add", async (req, res) => {
       // increase total net worth by invested amount
       stocks.netWorthHistory.push({
         date: today,
-        netWorth: stocks.netWorthHistory[stocks.netWorthHistory.length - 1].netWorth + parseFloat((value * amount).toFixed(2))
+        netWorth: (parseFloat(stocks.netWorthHistory[stocks.netWorthHistory.length - 1].netWorth) + parseFloat((value * amount))).toFixed(2)
       })
+
+      console.log(parseFloat(stocks.netWorthHistory[stocks.netWorthHistory.length - 1].netWorth.toFixed(2)));
 
       // add purchase to investments history
       const investedIndex = stocks.totalInvestedHistory.map(item => item.date).indexOf(today);
