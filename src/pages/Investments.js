@@ -97,6 +97,8 @@ export default function Investments() {
         <Plot
             data={investmentsData}
             layout={investmentsLayout}
+            useResizeHandler
+            className="w-[80%] h-[80%]"
         />
     
     </div>

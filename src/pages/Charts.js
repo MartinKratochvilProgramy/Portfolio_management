@@ -81,7 +81,9 @@ export default function Charts() {
                 b: 60,
                 t: 20,
                 pad: 5
-              }, title: false
+              }, 
+            title: false,
+            autosize: true
         } ;
         const netWorthHistory = [];
         const changesHistory = [];
@@ -136,7 +138,7 @@ export default function Charts() {
     }
 
     const {historyData, historyLayout} = initHistoryChart();        
-    const {pieData, pieLayout} = initPieChart();   
+    const {pieData, pieLayout} = initPieChart();  
     
   return (
     <div>
@@ -150,6 +152,8 @@ export default function Charts() {
         <Plot
             data={historyData}
             layout={historyLayout}
+            useResizeHandler
+            className="w-[80%] h-[80%]"
         />
         <h1 className='text-3xl font-semibold mt-2 py-4 md:py-4 mb-0'>
             ALL <span className='text-blue-600'>STOCKS</span>
@@ -157,6 +161,8 @@ export default function Charts() {
         <Plot
             data={pieData}
             layout={pieLayout}
+            useResizeHandler
+            className="w-[80%] h-[80%]"
         />
     </div>
   )
