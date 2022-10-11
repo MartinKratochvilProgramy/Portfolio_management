@@ -91,7 +91,9 @@ export default function Investments() {
   return (
     <div>
         <Navbar active={"investments"} logout={logout}/>
-        Investments
+        <h1 className='text-3xl font-semibold mt-2 py-4 md:py-4 mb-0'>
+            YOUR HISTORICAL <span className='text-blue-600'>INVESTMENTS</span>
+        </h1>
         <Plot
             data={investmentsData}
             layout={investmentsLayout}

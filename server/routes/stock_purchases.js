@@ -7,7 +7,6 @@ const stocks_history = app.post("/stock_purchases", async (req, res) => {
     // send purchases history for given ticker to client
     const { authorization } = req.headers;
     const ticker = req.body.ticker;
-    console.log(ticker);
   
     // get username password from headers
     const [, token] = authorization.split(" ");
