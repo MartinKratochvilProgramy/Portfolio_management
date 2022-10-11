@@ -145,7 +145,7 @@ export default function Charts() {
             NET <span className='text-blue-600'>WORTH</span> HISTORY
         </h1>
         <div className='font-semibold'>
-            Total: <span className='text-blue-600'>{currentNetWorth}</span> $
+            Total: <span className='text-blue-600'>{currentNetWorth.toFixed(2)}</span> $
         </div>
         <Plot
             data={historyData}
