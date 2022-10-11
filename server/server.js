@@ -10,6 +10,7 @@ const stock_add = require("./routes/stock_add")
 const stock_remove = require("./routes/stock_remove")
 const stocks = require("./routes/stocks")
 const stocks_history = require("./routes/stocks_history")
+const stock_purchases = require("./routes/stock_purchases")
 
 const updateStock = require("./functions/updateStocks")
 
@@ -31,6 +32,7 @@ app.use("/", stock_add);
 app.use("/", stock_remove);
 app.use("/", stocks);
 app.use("/", stocks_history);
+app.use("/", stock_purchases);
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -44,7 +46,7 @@ db.once("open", function () {
 async function updateStocks () {
   // loops through all user accounts and updates prev close
   // prices for each stocks
-  // this should run every weekday
+  // function should run every weekday
   const allStocks = await Stocks.find();
   for (let i = 0; i < allStocks.length; i++) {
     updateStock(allStocks[i].username);
@@ -52,4 +54,4 @@ async function updateStocks () {
   console.log("-------------------");
 }
 
-setInterval(function () {updateStocks()}, 1 * 60 * 1000);
+setInterval(function () {updateStocks()}, 1 * 3600 * 1000);

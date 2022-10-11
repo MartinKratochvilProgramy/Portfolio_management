@@ -1,15 +1,48 @@
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
 import DeleteStockModal from "./DeleteStockModal";
+import { CredentialsContext } from '../App';
 
 export default function Stock({ stock, deleteStock }) {
 
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [purchases, setPurchases] = useState([]);
+  const [fetchData, setFetchData] = useState(true)
+  const [expanded, setExpanded] = useState(false);
+  const [credentials, ] = useContext(CredentialsContext);
+
+  function expand() {
+    // on click fetch purchase data from server 
+    if (!expanded && fetchData) {
+      console.log("fetching data!");
+      const ticker = stock.ticker;
+      
+      fetch(`http://localhost:4000/stock_purchases`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Basic ${credentials.username}:${credentials.password}`
+        },
+        body: JSON.stringify({
+          ticker, 
+        })
+      })
+      .then((response ) => response.json())
+      .then((purchaseHistory) => {
+        setPurchases(purchaseHistory);
+      })
+      setFetchData(false);
+    }
+    setExpanded(!expanded);
+  }
 
   return (
-    <div className={"border-blue-600 border-solid border-[1px] rounded my-4"}>
-      <div className="flex flex-row items-center px-4 py-3 my-0 text-black font-medium text-sm leading-snug uppercase hover:shadow-xl focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
+    <div 
+      className={"border-blue-600 border-solid border-[1px] rounded px-4 py-3 my-4 cursor-pointer text-black font-medium text-sm leading-snug uppercase hover:shadow-xl focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"}
+      onClick={expand}
+    >
+      <div className="flex flex-row items-center">
 
-        <div className="w-full h-full text-justify flex items-start mx-3  ">
+        <div className="w-full h-full text-justify flex items-start">
           <div className="w-16 font-bold">{stock.ticker}</div>
           <div className="ml-4 w-6">{stock.amount}</div>
           <div className="ml-6">{stock.prevClose} USD</div>
@@ -20,8 +53,34 @@ export default function Stock({ stock, deleteStock }) {
           </svg>
         </button>
       </div>
-      {showDeleteModal ? <DeleteStockModal setShowDeleteModal={setShowDeleteModal} deleteStock={deleteStock} stock={stock}/> : null}
       
+      <div className="flex flex-col items-start justify-start space-y-2">
+        {expanded ? <div className="flex flex-row mt-4">
+          <div className="w-24 flex justify-start font-bold">DATE</div>
+          <div className="w-24 flex justify-center font-bold">AMOUNT</div>
+          <div className="w-24 flex justify-center font-bold">PRICE ($)</div>
+          
+        </div> : null}
+        <div className="">
+        {expanded ? purchases.map((purchase) => {
+          return (
+            <div key={purchase._id} className="flex flex-row">
+                <div className="w-24 flex justify-start">
+                  {purchase.date}
+                </div>
+                <div className="w-24 flex justify-center">
+                  {purchase.amount}
+                </div>
+                <div className="w-24 flex justify-center">
+                  {purchase.currentPrice}
+                </div>
+              </div>
+          )
+        }) 
+        : null}
+        </div>
+      </div>
+      {showDeleteModal ? <DeleteStockModal setShowDeleteModal={setShowDeleteModal} deleteStock={deleteStock} stock={stock}/> : null}
     </div>
   )
 }
