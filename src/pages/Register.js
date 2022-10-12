@@ -6,8 +6,8 @@ import { handleErrors } from './Login';
 export function registerInputError(username, password) {
   if (username === "") return "Missing username";
   if (password === "") return "Missing password";
-  if (username.length < 3) return "Username too short";
-  if (password.length < 6) return "Password too short";
+  if (username.length < 3) return "Username should be longer than 3 characters";
+  if (password.length < 6) return "Password should be longer than 6 characters";
   return false;
 }
 

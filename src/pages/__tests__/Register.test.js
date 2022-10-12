@@ -19,11 +19,11 @@ describe("register", () => {
     test("validate register input return err message on username.length < 3", () => {
       const username = "te";
       const password = "testtest";
-      expect(registerInputError(username, password)).toBe("Username too short");
+      expect(registerInputError(username, password)).toBe("Username should be longer than 3 characters");
     })
     test("validate register input return err message on username.password < 6", () => {
       const username = "test";
       const password = "test";
-      expect(registerInputError(username, password)).toBe("Password too short");
+      expect(registerInputError(username, password)).toBe("Password should be longer than 6 characters");
     })
   });
