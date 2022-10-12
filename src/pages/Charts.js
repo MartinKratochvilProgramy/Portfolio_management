@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-//import Plot from 'react-plotly.js';
+import Plot from 'react-plotly.js';
 import Navbar from '../components/Navbar';
 import { CredentialsContext } from '../App';
 import { handleErrors } from './Login';

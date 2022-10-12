@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { CredentialsContext } from '../App';
-//import Plot from 'react-plotly.js';
+import Plot from 'react-plotly.js';
 import Navbar from '../components/Navbar';
 import { handleErrors } from './Login';
 

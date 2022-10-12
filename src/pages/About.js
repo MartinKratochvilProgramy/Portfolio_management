@@ -9,7 +9,7 @@ export default function About() {
         <Navbar active={"about"}/>
         <div className='flex flex-col justify-center items-center space-y-16'>
             <h1 className='text-3xl font-semibold mt-8'>
-                <span className='text-blue-600'>ADD</span> STOCKS AND <span className='text-blue-600'>MANAGE</span> YOUR STOCK PORTFOLIO
+                <span className='text-blue-600'>ADD</span> STOCKS AND <span className='text-blue-600'>MANAGE</span> YOUR PORTFOLIO
             </h1>
             <p className='max-w-[60%] text-xl'>
                 Under the section <a href="/stocks" className='text-blue-600 underline underline-offset-4'>Stocks</a> add the stocks you have in your portfolio. Specify ticker and amount. App uses Yahoo Finance API, so in 
