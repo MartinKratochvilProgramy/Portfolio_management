@@ -27,7 +27,13 @@ export default function About() {
             <p className='max-w-[60%] text-xl'>
                 This app is intended for the 'Bogglehead' type investor who likes to invest regularly over longer periods of time.
             </p>
-            <p className='max-w-[60%] text-xl pt-24 pb-8'>
+            <p className='flex flex-row space-x-2 max-w-[60%] text-xl pt-24 pb-8'>
+                <img 
+                    className=''
+                    src={require("../img/GitHub-Mark-32px.png")} 
+                    alt="GitHub_logo"
+                    target="_blank"
+                />
                 <a href="https://github.com/MartinKratochvilProgramy/Portfolio_management" className='text-blue-600 underline underline-offset-4'>GitHub</a>
             </p>
         </div>
