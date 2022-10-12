@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import React from 'react';
 import { loginInputError } from '../Login';
 
 describe("login", () => {
@@ -19,4 +19,5 @@ describe("login", () => {
     const password = "";
     expect(loginInputError(username, password)).toBe("Missing password");
   });
+
 });
