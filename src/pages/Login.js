@@ -12,6 +12,12 @@ export const handleErrors = async (response) => {
   }
 }
 
+export function loginInputError(username, password) {
+  if (username === "") return "Missing username";
+  if (password === "") return "Missing password";
+  return false;
+}
+
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -21,9 +27,8 @@ export default function Login() {
   
   const login = (e) => {
     e.preventDefault();
-    if (username === "") setError("Missing username")
-    else if (password === "") setError("Missing password")
-    else {
+
+    if (!loginInputError(username, password)) {
       fetch(`http://localhost:4000/login`, {
         method: "POST",
         headers: {
@@ -52,6 +57,8 @@ export default function Login() {
       .catch((error) => {
         setError(error.message)
       })
+    } else {
+      setError(loginInputError(username, password));
     }
   };
   

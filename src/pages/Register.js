@@ -3,6 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { CredentialsContext } from '../App';
 import { handleErrors } from './Login';
 
+export function registerInputError(username, password) {
+  if (username === "") return "Missing username";
+  if (password === "") return "Missing password";
+  if (username.length < 3) return "Username too short";
+  if (password.length < 6) return "Password too short";
+  return false;
+}
+
 export default function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -14,9 +22,8 @@ export default function Register() {
   // use state vars to make http request
   const register = (e) => {
     e.preventDefault();
-    if (username === "") setError("Missing username")
-    else if (password === "") setError("Missing password")
-    else {
+
+    if(!registerInputError(username, password)) {
       fetch(`http://localhost:4000/register`, {
         method: 'POST',
         headers: {
@@ -45,6 +52,8 @@ export default function Register() {
       .catch((error) => {
         setError(error.message)
       })
+    } else {
+      setError(registerInputError(username, password));
     }
   };
 
