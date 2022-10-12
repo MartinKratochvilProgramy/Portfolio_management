@@ -32,9 +32,15 @@ export default function About() {
                     className=''
                     src={require("../img/GitHub-Mark-32px.png")} 
                     alt="GitHub_logo"
-                    target="_blank"
-                />
-                <a href="https://github.com/MartinKratochvilProgramy/Portfolio_management" className='text-blue-600 underline underline-offset-4'>GitHub</a>
+                    />
+                <a 
+                    href="https://github.com/MartinKratochvilProgramy/Portfolio_management" 
+                    className='text-blue-600 underline underline-offset-4'
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    >
+                    GitHub
+                    </a>
             </p>
         </div>
     </div>
